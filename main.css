@@ -1,0 +1,160 @@
+/*general*/
+*{	
+	box-sizing:border-box;	
+	font-family: 'Oxygen', sans-serif;
+}
+
+html,body{
+	height:100%;
+}
+
+@font-face
+{
+    font-family: "Caviar Dreams";
+    src: url(fonts/caviar_dreams/CaviarDreams.ttf);
+}
+
+h1{
+	font-family: "Caviar Dreams", sans-serif;
+}
+
+body{
+	padding:0;
+	margin:0;
+}
+
+input{
+	height: 30px;
+	padding:2px 10px;
+}
+
+input[type=checkbox],input[type=radio]{
+	height:20px;
+	width: 20px;
+}
+
+button{
+	height:30px;	
+	border-radius: 2px;
+}
+
+li{
+	list-style: none;
+	margin-bottom:1px;
+	border-radius: 2px;
+	border:solid 1px;
+
+
+	padding:2px;
+}
+
+fieldset{
+	border:solid 1px;
+}
+
+.clear{
+	clear:both;
+}
+
+#mainWrapper{
+	height: 100%;
+	width:100%;	
+	z-index: 1;
+	display: flex;
+}
+
+#modal{
+	position:fixed;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	opacity: 0.5;
+	background-color: black;
+	z-index: 2;
+}
+
+/*Main Area*/
+#mainArea{
+	padding:10px;
+	height: 100%;
+	width:100%;
+}
+
+#addTaskDiv{
+	display: flex;
+	max-width: 500px;
+}
+
+#addTaskDiv input{
+	flex-grow: 1;
+	margin:0;
+	margin-right: 1px;
+}
+
+#taskList{
+	max-width:500px;
+	padding: 0;
+}
+
+#taskList li{
+	height:30px;
+	cursor: pointer;
+	position:relative;
+}
+
+#taskList li:hover{
+	background-color:rgba(0,0,0,0.1);
+}
+
+#taskList li:after{
+	content:'';
+	clear:both;
+	float:right;
+	display:inline;
+}
+
+#taskList button{
+	float:right;
+	height:100%;
+}
+
+.taskText{
+	position:absolute;
+	line-height: 0;
+	top:15px;
+}
+
+/*Filter sidebar*/
+#filterDiv{
+	height:100%;
+	width:200px;
+	border-right:#27596C 1px solid;
+	padding:10px;
+}
+
+/*Task Editor*/
+#taskEditorDiv{
+	height:100%;
+	width:500px;
+	box-sizing:border-box;
+	position:fixed;
+	right:0;
+	top:0;
+
+	border-left:#27596C 1px solid;
+	padding-left:10px;
+	padding-right:10px;
+
+	transition: right 0.5s;
+	z-index: 3;
+}
+
+.taskEditorHidden{
+	right:-500px!important;
+}
+
+#taskEditorDiv .row{
+	clear:both;
+	padding:3px;
+}

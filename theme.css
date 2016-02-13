@@ -1,0 +1,18 @@
+body{
+	/*//background-color: #eee;*/
+	background-color:#b69fd4;
+}
+
+li{
+	border-color:#CCC;
+}
+
+button{
+	/*background-color: #297D48;*/
+	/*color:#DFECE4;*/
+	border:none;
+}
+
+#taskEditorDiv{
+	background-color: #b69fd4;
+}

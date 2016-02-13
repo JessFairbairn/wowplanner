@@ -1,0 +1,7 @@
+describe("Player", function() {
+  
+
+  it("should fail", function() {
+    player.play(song);
+    expect(3+4).toEqual(7);
+  });

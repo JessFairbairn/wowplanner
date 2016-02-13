@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jasmine Spec Runner</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
+  <!-- start with loading jasmine -->
+  <link rel="stylesheet" type="text/css" href="node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
+  <script type="text/javascript" src="node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
+  <script type="text/javascript" src="node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+
+  <!-- then require.js -->
+  <script type="text/javascript" src="node_modules/require.js/require.js"></script>
+
+  <!-- include source files here... -->
+  <script type="text/javascript" src="app.js"></script>
+
+  <!-- include spec files here... -->
+  <script type="text/javascript" src="specs/wowSpec.js"></script>
+
+  <script type="text/javascript">
+  window.addEventListener("load", function onLoad() {
+    var jasmineEnv = jasmine.getEnv(),
+        reporter = new jasmine.TrivialReporter();
+
+    jasmineEnv.addReporter(reporter);
+    setTimeout(function () {
+        jasmineEnv.execute();
+       // Without this setTimeout, the specs don't always get execute in webKit browsers, I don't know why
+    }, 10);
+    window.removeEventListener("load", onLoad, true);
+  }, true);
+  </script>
+
+</head>
+
+<body>
+</body>
+</html>
