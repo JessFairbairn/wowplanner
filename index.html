@@ -39,10 +39,13 @@
 		<ul id="taskList">
 			<wow-task-li  ng-repeat="task in tasks | filter:activeFilter | filter: {isComplete:false} | orderBy:'priority'"/>
 		</ul>
-		<h3>Completed Tasks</h3>
-		<ul id="taskList">
-			<wow-task-li  ng-repeat="task in tasks | filter:activeFilter | filter: {isComplete:true}"/>
-		</ul>
+		<button ng-click="showCompleted = !showCompleted" type="button">Show/Hide Completed Tasks</button>
+		<div id="completedTasks" ng-show="showCompleted">
+			<h3>Completed Tasks</h3>
+			<ul id="taskList">
+				<wow-task-li  ng-repeat="task in tasks | filter:activeFilter | filter: {isComplete:true}"/>
+			</ul>
+		</div>
 	</div>
 </div>
 

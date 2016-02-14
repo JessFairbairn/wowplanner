@@ -33,6 +33,8 @@ app.controller("wowController", ["$scope","localStorageService","wowFilters","Wo
 
 	$scope.newTask = new WowTask();
 
+	$scope.showCompleted = false;
+
 	$scope.debugMode = true;
 
 	/*UI Functions*/
@@ -101,10 +103,22 @@ app.service('wowFilters', function(){
 
 
 
-
+//directives
 app.directive("wowTaskLi", function() {
     return {
         templateUrl : "task-li.html",
         restrict: 'E'
+    };
+});
+
+app.directive('input', function() {
+    return {
+        restrict: 'E',
+        require: '?ngModel',
+        link: function(scope, element, attrs, ngModel) {
+            if ('type' in attrs && attrs.type.toLowerCase() === 'range') {
+                ngModel.$parsers.push(parseFloat);
+            }
+        }
     };
 });

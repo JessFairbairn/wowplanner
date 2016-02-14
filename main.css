@@ -50,6 +50,10 @@ li{
 
 fieldset{
 	border:solid 1px;
+	margin-top:10px;
+}
+legend{
+	font-weight: bold;
 }
 
 .clear{

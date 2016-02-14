@@ -3,7 +3,7 @@ angular.module("wowApp").factory('WowTask', function(){
 	var constructor = function(title, deadline, priority, isComplete, tags){
 		this.title = title || "";
 		this._deadline = null;
-		this.priority = priority || 3;
+		this.priority = parseInt(priority) || 3;
 		this.isComplete = isComplete || false;
 		this.tags = tags || [];
 		
