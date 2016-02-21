@@ -18,7 +18,7 @@ app.controller("wowController", ["$scope","localStorageService","wowFilters","Wo
 			var jsonTask = todosInStore[i];
 
 			$scope.tasks.push(
-				new WowTask(jsonTask.title, jsonTask._deadline,jsonTask.priority, jsonTask.isComplete, jsonTask.tags)
+				new WowTask(jsonTask.title, jsonTask._deadline,jsonTask.priority, jsonTask.isComplete, jsonTask.tags, jsonTask.prerequisites, jsonTask.ID)
 			);
 		}
 	}
@@ -26,6 +26,8 @@ app.controller("wowController", ["$scope","localStorageService","wowFilters","Wo
 	$scope.$watch('tasks', function () {
 	  localStorageService.set('tasks', $scope.tasks);
 	}, true);
+
+	WowTask.AssignIds($scope.tasks);
 
 	$scope.filters = wowFilters;
 
@@ -36,6 +38,31 @@ app.controller("wowController", ["$scope","localStorageService","wowFilters","Wo
 	$scope.showCompleted = false;
 
 	$scope.debugMode = true;
+
+	$scope.findTaskById = function(ID){
+   		for (var i = $scope.tasks.length - 1; i >= 0; i--) {
+   			var task = $scope.tasks[i];
+   			if(task.ID === ID){
+   				return task;
+   			}
+   		}
+   	};
+
+   	$scope.recursiveTaskOrder = function(task){
+   		var currentScore = task.orderingScore;
+   		for (var i = $scope.tasks.length - 1; i >= 0; i--) {
+   			var childTask = $scope.tasks[i];
+
+   			if(childTask.prerequisites.indexOf(task.ID)>-1){
+   				var childScore = childTask.orderingScore;
+   				if(currentScore>childScore){
+   					currentScore = childScore;
+   				}
+   			}
+   		}
+
+   		return currentScore - 0.001;//to make sure it's above the dependant task
+   	};
 
 	/*UI Functions*/
 
@@ -65,6 +92,10 @@ app.controller("wowController", ["$scope","localStorageService","wowFilters","Wo
     	return true;
     };
 
+    $scope.modalClick = function(){
+    	$scope.selectedTask = null;
+    };
+
     //tags
     $scope.collectTags = function(){
     	var distinctTags = {};
@@ -89,6 +120,10 @@ app.controller("wowController", ["$scope","localStorageService","wowFilters","Wo
     	window.console.log(localStorageService.get('tasks'));
     };
 
+    $scope.taskDump = function(){
+    	window.console.log($scope.selectedTask);
+    };
+
 }]);
 
 app.service('wowFilters', function(){
@@ -99,6 +134,11 @@ app.service('wowFilters', function(){
    this.dueToday = function(task){
    		return (task.deadline && task.deadline <= new Date());
    };
+
+   this.taskOrdering = function(task){
+   		return task.orderingScore;
+   };
+
 });
 
 

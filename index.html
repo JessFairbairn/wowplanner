@@ -12,7 +12,7 @@
 	<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
 </head>
 <body ng-app="wowApp" ng-controller="wowController as wowCtrl">
-<div id="modal" ng-show="isModalVisible()"></div>
+<div id="modal" ng-show="isModalVisible()" ng-click="modalClick();"></div>
 <div id="mainWrapper">
 	<div id="filterDiv">
 		<h1>Wow Planner</h1>
@@ -37,7 +37,7 @@
 			<button type="button" ng-click="addTask()">Add Task</button>
 		</div>
 		<ul id="taskList">
-			<wow-task-li  ng-repeat="task in tasks | filter:activeFilter | filter: {isComplete:false} | orderBy:'priority'"/>
+			<wow-task-li  ng-repeat="task in tasks | filter:activeFilter | filter: {isComplete:false} | orderBy:recursiveTaskOrder"/>
 		</ul>
 		<button ng-click="showCompleted = !showCompleted" type="button">Show/Hide Completed Tasks</button>
 		<div id="completedTasks" ng-show="showCompleted">
@@ -71,6 +71,14 @@
 		<datalist id="taskEditorTagList">
 			<option ng-repeat="(key,value) in collectTags()">{{key}}</option>
 		</datalist>
+		<div class="clear"/>
+		<!-- /*Dependant on...*/ -->
+		<label>Prerequisites
+		<select multiple="multiple" ng-model="selectedTask.prerequisites" 
+			ng-options="prereqTask.ID as prereqTask.title for prereqTask in tasks | filter: {isComplete: false}">
+		</select>
+		</label>
+		<button ng-click="taskDump()" ng-show="debugMode">Task Dump</button>
 	</div>
 </div>
 
