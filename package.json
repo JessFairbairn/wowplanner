@@ -1,1 +1,27 @@
-{}
+{
+  "name": "WowPlanner",
+  "version": "0.1",
+  "description": "Whimsical To-Do list and planner",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cool-ascii-faces": "1.3.3",
+    "ejs": "2.3.3",
+    "express": "4.13.3"
+  },
+  "engines": {
+    "node": "0.12.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jessfairbairn/WowPlanner"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "license": "MIT"
+}
