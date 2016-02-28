@@ -37,7 +37,7 @@ app.controller("wowController", ["$scope","localStorageService","wowFilters","Wo
 
 	$scope.showCompleted = false;
 
-	$scope.debugMode = true;
+	$scope.debugMode = false;
 
 	$scope.findTaskById = function(ID){
    		for (var i = $scope.tasks.length - 1; i >= 0; i--) {

@@ -1,6 +1,6 @@
 {
   "name": "WowPlanner",
-  "description": "A barebones Node.js app using Express 4",
+  "description": "Whimsical To-Do list and planner",
   "repository": "Whimsical To-Do list and planner",
   "logo": "http://node-js-sample.herokuapp.com/node.svg",
   "keywords": ["node", "express", "static"],
