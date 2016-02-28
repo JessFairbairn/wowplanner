@@ -2,6 +2,7 @@
 *{	
 	box-sizing:border-box;	
 	font-family: 'Oxygen', sans-serif;
+	border:black 0px none;
 }
 
 html,body{
@@ -31,6 +32,7 @@ input{
 input[type=checkbox],input[type=radio]{
 	height:20px;
 	width: 20px;
+	flex-grow:0!important;
 }
 
 button{
@@ -46,6 +48,10 @@ li{
 
 
 	padding:2px;
+}
+
+wow-task-li li > .fa{
+	line-height: 0;top:13px;position:relative;
 }
 
 fieldset{
@@ -67,6 +73,20 @@ select[multiple] option{
 
 .clear{
 	clear:both;
+}
+
+.row{
+	display:flex;
+	align-items:center;
+}
+
+.row input:only-of-type, .row fieldset{
+	flex-grow: 1;
+}
+
+label + input, label + select, button + input, button + select, input + button,
+label input, label select{
+	margin-left:5px;
 }
 
 /*Page Regions*/

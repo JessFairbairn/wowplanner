@@ -1,7 +1,9 @@
-<li ng-click="taskClick(task)" >
-				<input type="checkbox" ng-model="task.isComplete" ng-click="$event.stopPropagation();">
-				<span class="taskText">{{task.title}}</span>
-				<button type="button" class="delete" ng-click="deleteTask(task);$event.stopPropagation();">Delete</button>
-				<span style="float:right">{{task.priority}}</span>
-				
-			</li>
+<li ng-click="taskClick(task)" contextmenu="taskCtxMenu">
+	<input type="checkbox" ng-model="task.isComplete" ng-click="$event.stopPropagation();">
+	<span class="taskText">{{task.title}}</span>
+	<button type="button" class="delete" ng-click="deleteTask(task);$event.stopPropagation();">
+		<span class="fa fa-trash-o"></span>
+	</button>
+	<span style="float:right" ng-if="debugMode">{{task.priority}}</span>
+	<span style="float:right;" class="fa fa-calendar-o" ng-if="task.deadline"></span>
+</li>

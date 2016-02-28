@@ -1,5 +1,5 @@
 "use strict";
-var app = angular.module("wowApp",['LocalStorageModule'])
+var app = angular.module("wowApp",['LocalStorageModule', 'ngAnimate'])
 .config(['localStorageServiceProvider', function(localStorageServiceProvider){
   localStorageServiceProvider.setPrefix('ls');
 }]);
@@ -72,8 +72,17 @@ app.controller("wowController", ["$scope","localStorageService","wowFilters","Wo
     };
 
     $scope.deleteTask = function(task){
-    	var index = $scope.tasks.indexOf(task);
-    	$scope.tasks.splice(index, 1);
+    	if(typeof task === "number"){
+			task = $scope.findTaskById(task);
+		}
+
+    	if(confirm("Are you sure you want to delete '" + task.title + "'?")){
+	    	var index = $scope.tasks.indexOf(task);
+	    	if(index === -1){
+	    		throw "Error in deleteTask: Could not find task in task list";
+	    	}
+	    	$scope.tasks.splice(index, 1);
+	    }
     };
 
     $scope.taskClick = function(task){
@@ -97,19 +106,36 @@ app.controller("wowController", ["$scope","localStorageService","wowFilters","Wo
     };
 
     //tags
+    $scope.tagMap = {};
+
     $scope.collectTags = function(){
-    	var distinctTags = {};
+    	var tagMap = $scope.tagMap;
     	for (var i = $scope.tasks.length - 1; i >= 0; i--) {
     		var thisTasksTags = $scope.tasks[i].tags;
 
     		for (var j = thisTasksTags.length - 1; j >= 0; j--) {
-    			if(distinctTags[thisTasksTags[j]] === undefined){
-    				distinctTags[thisTasksTags[j]] = true;
+    			if(tagMap[thisTasksTags[j]] === undefined){
+    				tagMap[thisTasksTags[j]] = true;
     			}
     		}
     	}
-    	return distinctTags;
+    	return tagMap;
     };
+
+    $scope.collectTags();
+
+
+
+   $scope.tagFilter = function(task){
+   	if(!task.tags.length) {return true;}
+
+   	for (var i = task.tags.length - 1; i >= 0; i--) {
+   		if($scope.tagMap[task.tags[i]] === false){
+   			return false;
+   		}
+   		return true;
+   	}
+   };
 
     //debugging methods
     $scope.scopeDump = function(){
