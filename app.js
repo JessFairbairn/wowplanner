@@ -124,17 +124,39 @@ app.controller("wowController", ["$scope","localStorageService","wowFilters","Wo
 
     $scope.collectTags();
 
+    $scope.addTagToSelectedTask = function(newTag){
+    	if(newTag){
+	    	var tagNames = Object.getOwnPropertyNames($scope.tagMap);
+	    	for (var i = tagNames.length - 1; i >= 0; i--) {
+	    		if(tagNames[i].toLowerCase() === newTag.toLowerCase()){
+	    			newTag = tagNames[i];
+	    			break;
+	    		}
+	    	}
+	    }
+    	$scope.selectedTask.AddTag(newTag);
 
+    };
 
    $scope.tagFilter = function(task){
-   	if(!task.tags.length) {return true;}
+   	if(task.tags.length === 0) {return true;}
 
    	for (var i = task.tags.length - 1; i >= 0; i--) {
-   		if($scope.tagMap[task.tags[i]] === false){
-   			return false;
-   		}
-   		return true;
+   		if($scope.tagMap[task.tags[i]] === true){
+   			return true;
+   		}   		
    	}
+   	return false;
+   };
+
+   $scope.preReqFilter = function(preReq){
+   		if(!$scope.selectedTask) return false;
+   		var selectedTask = $scope.selectedTask;
+   		if(preReq.ID === selectedTask.ID){ return false;}
+
+   		if(preReq.prerequisites.indexOf(selectedTask.ID) > -1) return false;//stop circular prereqs
+
+   		return true;
    };
 
     //debugging methods
@@ -164,6 +186,8 @@ app.service('wowFilters', function(){
    this.taskOrdering = function(task){
    		return task.orderingScore;
    };
+
+   
 
 });
 

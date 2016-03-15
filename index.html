@@ -65,10 +65,10 @@
 		<input ng-model="selectedTask.title" />
 	</div>
 	<div class="row">
-		<label>Deadline<input type="date" ng-model="selectedTask.deadline"></label>
+		<label>Deadline</label><input type="date" ng-model="selectedTask.deadline">
 	</div>
 	<div class="row">
-		<label>Importance<input type="range" ng-model="selectedTask.priority" min="1" max="5"></label>
+		<label>Importance</label><input type="range" ng-model="selectedTask.priority" min="1" max="5">
 	</div>
 	<div class="row">
 		<fieldset>
@@ -79,9 +79,8 @@
 		</fieldset>
 	</div>
 	<div class="row">
-		<label>Add Tag<input ng-model="selectedTask.newTag" type="text" list="taskEditorTagList">
-		</label>
-		<button type="button" ng-click="selectedTask.AddTag();" ng-keyup="returnKeyOverride($event,selectedTask.AddTag);">+</button>
+		<label>Add Tag</label><input ng-model="selectedTask.newTag" type="text" list="taskEditorTagList" ng-keyup="returnKeyOverride($event,addTagToSelectedTask);">
+		<button type="button" ng-click="addTagToSelectedTask(selectedTask.newTag);">+</button>
 		<datalist id="taskEditorTagList">
 			<option ng-repeat="(key,value) in tagMap">{{key}}</option>
 		</datalist>
@@ -90,7 +89,7 @@
 		<!-- /*Dependant on...*/ -->
 		<label>Prerequisites</label>
 		<select multiple="multiple" ng-model="selectedTask.prerequisites" 
-			ng-options="prereqTask.ID as prereqTask.title for prereqTask in tasks | filter: {isComplete: false}">
+			ng-options="prereqTask.ID as prereqTask.title for prereqTask in tasks | filter: {isComplete: false} | filter: preReqFilter">
 		</select>
 	</div>
 	<div class="row" ng-show="debugMode">	

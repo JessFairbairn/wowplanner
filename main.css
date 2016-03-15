@@ -9,14 +9,21 @@ html,body{
 	height:100%;
 }
 
-@font-face
+/*@font-face
 {
     font-family: "Caviar Dreams";
     src: url(fonts/caviar_dreams/CaviarDreams.ttf);
+}*/
+
+@font-face
+{
+    font-family: "Hallo Sans";
+    src: url("fonts/hallo_sans/Hallo sans.otf");
 }
 
 h1{
-	font-family: "Caviar Dreams", sans-serif;
+	font-family: "Hallo Sans", sans-serif;
+	/*font-weight: bold;*/
 }
 
 body{
@@ -68,7 +75,9 @@ select[multiple] {
 
 select[multiple] option{
 	height: 30px;
+	line-height: 30px;
 	font-size: 16px;
+	padding-top:5px;
 }
 
 .clear{
@@ -147,6 +156,30 @@ label input, label select{
 	float:right;
 	display:inline;
 }
+wow-task-li{
+	opacity: 1;
+    transition: opacity 1s;
+    -webkit-transition: all 1s;
+
+    transition-property: opacity height;
+}
+wow-task-li.ng-enter {
+    opacity: 0;
+}
+wow-task-li.ng-enter.ng-enter-active {
+    opacity: 1;
+}
+
+wow-task-li.ng-leave {
+    opacity: 1;
+}
+wow-task-li.ng-leave.ng-leave-active {
+    opacity: 0;
+}
+
+wow-task-li *{
+	transition-property: inherit;
+}
 
 #taskList button{
 	float:right;
@@ -191,4 +224,8 @@ label input, label select{
 #taskEditorDiv .row{
 	clear:both;
 	padding:3px;
+}
+
+#taskEditorDiv label{
+	width:93px;
 }

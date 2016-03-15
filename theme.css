@@ -3,14 +3,23 @@ body{
 	background-color:#b69fd4;
 }
 
-li{
+li, fieldset{
 	border-color:#888;
 }
 
 button{
-	/*background-color: #297D48;*/
+	background-color: #D9CCEC;
 	/*color:#DFECE4;*/
 	border:none;
+	cursor: pointer;
+}
+
+button:hover{
+	background-color: #F5F0FB;
+}
+
+select[multiple] option:nth-child(2n){
+	background-color: #D9CCEC;
 }
 
 #taskEditorDiv{
