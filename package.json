@@ -7,9 +7,10 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "angular-local-storage": "0.2.6",
+    "body-parser": "^1.15.0",
     "ejs": "2.3.3",
-    "express": "4.13.3",
-    "angular-local-storage": "0.2.6"
+    "express": "4.13.3"
   },
   "engines": {
     "node": "0.12.7"

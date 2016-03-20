@@ -22,6 +22,6 @@ select[multiple] option:nth-child(2n){
 	background-color: #D9CCEC;
 }
 
-#taskEditorDiv{
+.sidebar{
 	background-color: #b69fd4;
 }

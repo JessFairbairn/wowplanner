@@ -2,13 +2,13 @@
 <html>
 <head>
 	<title>Wow Planner!</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
 	<!-- <script type="text/javascript" src="../angularjs/angular.min.js"></script> -->
 	<script src="app.js"></script>
 	<script src="services/WowTask.js"></script>
 	<script src="/node_modules/angular-local-storage/src/angular-local-storage.js"></script>
 	<script src="nonAngular.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-animate.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="main.css"/>
 	<link rel="stylesheet" type="text/css" href="theme.css"/>
 	<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
@@ -19,15 +19,21 @@
 <div id="mainWrapper">
 	<div id="filterDiv">
 		<h1>Wow Planner</h1>
+		<button type="button" ng-click="displayLoginDialog = true;selectedTask = null;">Login</button>
+		<br>
 		<label><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.all">All Tasks</label><br>
 		<label><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.dueToday">Due Today</label>
 		<br>
 		<fieldset>
 			<legend>Tags</legend>
-			<div ng-repeat="(key, value) in tagMap | orderBy:(key)" class=row>
+			<div ng-repeat="(key, value) in tagMap | orderBy:(key)" class=row contextmenu="tagMenu">
 				<input type="checkbox" ng-model="tagMap[key]" ng-attr-id="{{'toggleTag' + $index}}">
 				<label ng-attr-for="{{'toggleTag' + $index}}">{{key}}</label>
-			</span>
+			</div>
+
+		<menu type="context" id="tagMenu">
+			<menuitem label="Show Only This" onclick="showOnlyThisTagExternal(event);"/>
+		</menu>
 		</fieldset>
 		<br><br>
 		<button ng-click="debugMode = !debugMode;">Toggle Debugging</button>
@@ -58,7 +64,7 @@
 	</div>
 </div>
 
-<div id="taskEditorDiv" ng-class="{taskEditorHidden:!selectedTask}">
+<div id="taskEditorDiv" ng-class="{sidebar:true, sidebarHidden:!selectedTask}">
 	
 	<div class="row">
 		<button type="button" ng-click="closeTaskEditor();">Close</button>
@@ -94,6 +100,19 @@
 	</div>
 	<div class="row" ng-show="debugMode">	
 		<button ng-click="taskDump()">Task Dump</button>
+	</div>
+</div>
+
+<div id="loginDiv" ng-class="{sidebar:true, sidebarHidden:!displayLoginDialog}">
+	<div class="row">
+		<label>Username</label><input type="text" ng-model="loginDetails.username">
+	</div>
+	<div class="row">
+		<label>Password</label><input type="password" ng-model="loginDetails.password">
+	</div>
+	<span id="loginResponse" ng-model="loginDetails.loginResponse"></span>
+	<div class="row">
+		<button type="button" ng-click="loginSubmit()">Login...</button>
 	</div>
 </div>
 

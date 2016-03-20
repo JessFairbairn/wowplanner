@@ -4,11 +4,11 @@ var app = angular.module("wowApp",['LocalStorageModule', 'ngAnimate'])
   localStorageServiceProvider.setPrefix('ls');
 }]);
 
-
-app.controller("wowController", ["$scope","localStorageService","wowFilters","WowTask",function($scope,localStorageService,wowFilters,WowTask) {
+app.controller("wowController", ["$scope","$http","localStorageService","wowFilters","WowTask",
+    function($scope,$http,localStorageService,wowFilters,WowTask) {
 	//initialise variables
 	$scope.isModalVisible = function() {
-		return $scope.selectedTask;
+		return $scope.selectedTask || $scope.displayLoginDialog;
 	};
 
 	var todosInStore = localStorageService.get('tasks');
@@ -103,7 +103,10 @@ app.controller("wowController", ["$scope","localStorageService","wowFilters","Wo
 
     $scope.modalClick = function(){
     	$scope.selectedTask = null;
+      $scope.displayLoginDialog = false;
     };
+
+    $scope.displayLoginDiv = false;
 
     //tags
     $scope.tagMap = {};
@@ -158,6 +161,19 @@ app.controller("wowController", ["$scope","localStorageService","wowFilters","Wo
 
    		return true;
    };
+
+     // Network functions
+     $scope.loginSubmit = function(){
+      $http.post('/login', 
+        {"username":"furby","password":"password"})
+        .then(function(){
+            //success logging in 
+            alert("logged in lol but not really");
+
+        }, function(){
+          alert("Error logging in :(");
+        });
+     }
 
     //debugging methods
     $scope.scopeDump = function(){

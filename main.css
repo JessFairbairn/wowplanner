@@ -156,30 +156,42 @@ label input, label select{
 	float:right;
 	display:inline;
 }
-wow-task-li{
-	opacity: 1;
-    transition: opacity 1s;
-    -webkit-transition: all 1s;
 
-    transition-property: opacity height;
+
+wow-task-li, wow-task-li li,
+wow-task-li, wow-task-li li{
+    transition: all 1s;
+    -webkit-transition:all linear 1s;
+    overflow:hidden;
 }
-wow-task-li.ng-enter {
-    opacity: 0;
+
+wow-task-li.ng-enter, wow-task-li.ng-enter *{
+    opacity: 0!important;
+    height:0px!important;
 }
-wow-task-li.ng-enter.ng-enter-active {
+
+/*wow-task-li.ng-enter,*/ wow-task-li.ng-enter li{
+    opacity: 0!important;
+    height:0px!important;
+}
+/*wow-task-li.ng-enter-active,*/ wow-task-li.ng-enter-active li{
     opacity: 1;
+    height:30px;
 }
 
-wow-task-li.ng-leave {
-    opacity: 1;
-}
-wow-task-li.ng-leave.ng-leave-active {
+wow-task-li.ng-animate.ng-leave, wow-task-li.ng-animate.ng-leave li{
     opacity: 0;
+    height:0;
 }
 
-wow-task-li *{
-	transition-property: inherit;
+wow-task-li.ng-animate.ng-leave-active li{
+    opacity: 0;
+    height:0;
 }
+
+/*wow-task-li *{
+	transition: inherit;
+}*/
 
 #taskList button{
 	float:right;
@@ -200,8 +212,8 @@ wow-task-li *{
 	padding:10px;
 }
 
-/*Task Editor*/
-#taskEditorDiv{
+/*General Sidebar*/
+.sidebar{
 	height:100%;
 	width:500px;
 	box-sizing:border-box;
@@ -217,15 +229,15 @@ wow-task-li *{
 	z-index: 3;
 }
 
-.taskEditorHidden{
+.sidebarHidden{
 	right:-500px!important;
 }
 
-#taskEditorDiv .row{
+.sidebar .row{
 	clear:both;
 	padding:3px;
 }
 
-#taskEditorDiv label{
+.sidebar label{
 	width:93px;
 }
