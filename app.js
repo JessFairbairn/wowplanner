@@ -1,3 +1,5 @@
+/* jshint esversion:5, browser:true, devel:true, unused:true, undef:true*/
+
 "use strict";
 var app = angular.module("wowApp",['LocalStorageModule', 'ngAnimate'])
 .config(['localStorageServiceProvider', function(localStorageServiceProvider){
@@ -8,7 +10,7 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
     function($scope,$http,localStorageService,wowFilters,WowTask) {
 	//initialise variables
 	$scope.isModalVisible = function() {
-		return $scope.selectedTask || $scope.displayLoginDialog;
+		return $scope.selectedTask || $scope.displayLoginDialog || $scope.displayRegisterDialog;
 	};
 
 	var todosInStore = localStorageService.get('tasks');
@@ -104,6 +106,7 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
     $scope.modalClick = function(){
     	$scope.selectedTask = null;
       $scope.displayLoginDialog = false;
+      $scope.displayRegisterDialog = false;
     };
 
     $scope.displayLoginDiv = false;
@@ -164,8 +167,7 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 
      // Network functions
      $scope.loginSubmit = function(){
-      $http.post('/login', 
-        {"username":"furby","password":"password"})
+      $http.post('/login', $scope.loginDetails)
         .then(function(){
             //success logging in 
             alert("logged in lol but not really");
@@ -173,7 +175,19 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
         }, function(){
           alert("Error logging in :(");
         });
-     }
+     };
+
+     // Network functions
+     $scope.registerSubmit = function(){
+      $http.post('/register', $scope.registrationDetails)
+        .then(function(){
+            //success logging in 
+            alert("registered(!?)");
+
+        }, function(){
+          alert("Error registering :(");
+        });
+     };
 
     //debugging methods
     $scope.scopeDump = function(){

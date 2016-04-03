@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Wowplanner Admin Page</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+	<!-- <script type="text/javascript" src="../angularjs/angular.min.js"></script> -->
+	<script src="admin.js"></script>
+	<link rel="stylesheet" type="text/css" href="main.css"/>
+	<link rel="stylesheet" type="text/css" href="theme.css"/>
+</head>
+<body ng-app="adminApp" ng-controller="adminController">
+<h1>Admin</h1>
+<h2>Users</h2>
+<table>
+	<tr><th>User</th><th>Email</th><th>Password Set</th></tr>
+	<tr ng-repeat="user in users">
+		<td>{{user.username}}</td>
+		<td>{{user.email}}</td>
+		<td>{{user.passwordHash?"Yes":"No"}}</td>
+	</tr>
+</table>
+</body>
+</html>

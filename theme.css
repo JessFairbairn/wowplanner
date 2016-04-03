@@ -22,6 +22,12 @@ select[multiple] option:nth-child(2n){
 	background-color: #D9CCEC;
 }
 
+select[multiple] option:hover{
+	cursor:pointer;
+	background-color: #c3b7d4;
+	/*filter:brightness(-15%);*/
+}
+
 .sidebar{
 	background-color: #b69fd4;
 }

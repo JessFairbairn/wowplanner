@@ -8,9 +8,16 @@
   },
   "dependencies": {
     "angular-local-storage": "0.2.6",
+    "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.0",
+    "cookie-parser": "^1.4.1",
     "ejs": "2.3.3",
-    "express": "4.13.3"
+    "express": "4.13.3",
+    "express-session": "^1.13.0",
+    "method-override": "^2.3.5",
+    "orchestrate": "^0.8.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0"
   },
   "engines": {
     "node": "0.12.7"
