@@ -13,6 +13,8 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 		return $scope.selectedTask || $scope.displayLoginDialog || $scope.displayRegisterDialog;
 	};
 
+  $scope.userData = null;
+
 	var todosInStore = localStorageService.get('tasks');
 	$scope.tasks = [];
 	if(todosInStore){
@@ -167,17 +169,24 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 
      // Network functions
      $scope.loginSubmit = function(){
+      if(!$scope.loginForm.$valid) return;
       $http.post('/login', $scope.loginDetails)
-        .then(function(){
-            //success logging in 
-            alert("logged in lol but not really");
+        .then(function(res){            
+            //success logging in
+            //do something magical with res.data
+            $scope.userData = {};
+            $scope.displayLoginDialog = false;
 
-        }, function(){
-          alert("Error logging in :(");
+        }, function(res){
+            if (res.status === 401){
+              alert("Your username or password is incorrect.");
+            } else {
+              console.error("Unrecognised server response in loginSubmit: " + res);
+               alert("Something went wrong when trying to log in- please try again in a minute.");
+            }
         });
      };
 
-     // Network functions
      $scope.registerSubmit = function(){
       $http.post('/register', $scope.registrationDetails)
         .then(function(){
@@ -186,6 +195,28 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 
         }, function(){
           alert("Error registering :(");
+        });
+     };
+
+     $scope.logoutSubmit = function(){
+      $http.post('/logout', $scope.registrationDetails)
+        .then(function(){
+            $scope.userData = null;
+            alert("You have been logged out");
+
+        }, function(){
+          alert("Error logging out");
+        });
+     };
+
+     $scope.teapotSubmit = function(){
+      $http.post('/teapot', {})
+        .then(function(){
+            //success logging in 
+            //alert("registered(!?)");
+
+        }, function(){
+          alert("Error teapotting :(");
         });
      };
 

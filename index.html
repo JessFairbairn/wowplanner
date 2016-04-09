@@ -19,8 +19,13 @@
 <div id="mainWrapper">
 	<div id="filterDiv">
 		<h1>Wow Planner</h1>
-		<button type="button" ng-click="displayLoginDialog = true;selectedTask = null;">Login</button>
-		<button type="button" ng-click="displayRegisterDialog = true;selectedTask = null;">Register</button>
+		<button type="button" ng-click="displayLoginDialog = true;selectedTask = null;"
+			 ng-show="!userData">Login</button>
+		<button type="button" ng-click="displayRegisterDialog = true;selectedTask = null;"
+			ng-show="!userData">Register</button>
+		<button type="button" ng-click="displayRegisterDialog = true;selectedTask = null;"
+			ng-show="userData">Log Out</button>
+		<button type="button" ng-click="teapotSubmit()" ng-show="debugMode">Teapot</button>
 		<br>
 		<label><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.all">All Tasks</label><br>
 		<label><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.dueToday">Due Today</label>
@@ -105,16 +110,18 @@
 </div>
 
 <div id="loginDiv" ng-class="{sidebar:true, sidebarHidden:!displayLoginDialog}">
-	<div class="row">
-		<label>Username</label><input type="text" ng-model="loginDetails.username">
-	</div>
-	<div class="row">
-		<label>Password</label><input type="password" ng-model="loginDetails.password">
-	</div>
-	<span id="loginResponse" ng-model="loginDetails.loginResponse"></span>
-	<div class="row">
-		<button type="button" ng-click="loginSubmit()">Login...</button>
-	</div>
+	<form name="loginForm">
+		<div class="row">
+			<label>Username</label><input type="text" ng-model="loginDetails.username" required>
+		</div>
+		<div class="row">
+			<label>Password</label><input type="password" ng-model="loginDetails.password" required>
+		</div>
+		<span id="loginResponse" ng-model="loginDetails.loginResponse"></span>
+		<div class="row">
+			<button type="button" ng-click="loginSubmit()">Login...</button>
+		</div>
+	</form>
 </div>
 
 <div id="registerDiv" ng-class="{sidebar:true, sidebarHidden:!displayRegisterDialog}">

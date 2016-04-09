@@ -32,6 +32,7 @@ exports.localReg = function (username, password, email) {
       //if password matches take into website
   //if user doesn't exist or password doesn't match tell them it failed
 exports.localAuth = function (username, password) {
+   if(!username || !password) return null;
 
    return db.User.findOne({ username: username }).exec()
    .then(function (result){
@@ -42,7 +43,7 @@ exports.localAuth = function (username, password) {
             console.warn("User " + username + " has no password set");
             return null;
          }
-         console.log(bcrypt.compareSync(password, hash));
+         
          if (bcrypt.compareSync(password, hash)) {
             return result;
          } else {
@@ -54,6 +55,7 @@ exports.localAuth = function (username, password) {
    },
       function(reason){
          console.error("Failed to login: " + reason);
+         throw new Error(reason);
       }
    );
 };

@@ -9,8 +9,8 @@ const LocalStrategy = require('passport-local');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const db = require('./mongooseSetup.js');
-const config = require('./config.js'), //config file contains all tokens and other private info
-    funct = require('./authFunctions.js'); //funct file contains our helper functions for our Passport and database work
+//const config = require('./config.js'), //config file contains all tokens and other private info
+const funct = require('./authFunctions.js'); //funct file contains our helper functions for our Passport and database work
 
 
 
@@ -65,23 +65,37 @@ app.get('/', function(req, res) {
   //  }
 });
 
-app.post('/login',passport.authenticate('local-signin', {
-  successRedirect: '/',
-  failureRedirect: '/signin'
-  }));
+app.post('/login',passport.authenticate('local-signin', 
+	function(err, req, user) {
+		//THIS IS PROBABLY ALL WRONG BUT OH WELL
+		const res = req.res;
+		
+		if(err || !res){
+			res.sendStatus(500);
+		}
+		else if(user !== false){
+			res.send("Successfully Logged In");
+			//TODO: Load app data
+		}else{
+			//failed authentication
+			res.status(401).send("Authentication Failed");
+		}
+	}
+  ));
 
-app.post('/register', passport.authenticate('local-signup', {
-  successRedirect: '/',
-  failureRedirect: '/signin'
-  })
+app.post('/register', passport.authenticate('local-signup' )
 );
 
+app.post('/teapot', function(req, res){
+	res.status(402).json("lol");
+});
+
 app.get('/logout', function(req, res){
-  var name = req.user.username;
-  console.log("LOGGIN OUT " + req.user.username);
-  req.logout();
-  res.redirect('/');
-  req.session.notice = "You have successfully been logged out " + name + "!";
+	var name = req.user.username;
+	console.log("LOGGIN OUT " + req.user.username);
+	req.logout();
+	//res.redirect('/');
+	req.session.notice = "You have successfully been logged out " + name + "!";
 });
 
 app.get('/getUsers', function(req, res){
@@ -114,16 +128,17 @@ passport.use('local-signin', new LocalStrategy(
       if (user) {
         console.log("LOGGED IN AS: " + user.username);
         req.session.success = 'You are successfully logged in ' + user.username + '!';
-        done(null, user);
+        done(null, req, user);
       }
       if (!user) {
         console.log("COULD NOT LOG IN");
         req.session.error = 'Could not log user in. Please try again.'; //inform user could not log them in
-        done(null, user);
+        done(null, req, false);
       }
     })
     .catch(function (err){
       console.error(err.message);
+      done(err);
     });
   }
 ));
