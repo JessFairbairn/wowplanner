@@ -1,7 +1,8 @@
 /* jshint esversion:5, browser:true, devel:true, unused:true, undef:true*/
+/* global angular, getAngularScope*/
 
 "use strict";
-var app = angular.module("wowApp",['LocalStorageModule', 'ngAnimate'])
+var app = angular.module("wowApp",['LocalStorageModule',/* 'ngAnimate'*/])
 .config(['localStorageServiceProvider', function(localStorageServiceProvider){
   localStorageServiceProvider.setPrefix('ls');
 }]);
@@ -22,7 +23,7 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 			var jsonTask = todosInStore[i];
 
 			$scope.tasks.push(
-				new WowTask(jsonTask.title, jsonTask._deadline,jsonTask.priority, jsonTask.isComplete, jsonTask.tags, jsonTask.prerequisites, jsonTask.ID)
+				new WowTask(jsonTask.title, jsonTask._deadline,jsonTask.priority, jsonTask.isComplete, jsonTask.tags, jsonTask.prerequisites, jsonTask.ID, jsonTask._scheduledDate)
 			);
 		}
 	}
@@ -36,6 +37,8 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 	$scope.filters = wowFilters;
 
 	$scope.activeFilter = $scope.filters.all;
+
+  $scope.currentView = 'summaryView';
 
 	$scope.newTask = new WowTask();
 
@@ -209,6 +212,22 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
         });
      };
 
+     $scope.getCurrentUsername = function(){
+      $http.get('/currentUsername', {})
+        .then(function(res){
+            var username = res.data.username;
+            if(username === null){
+              alert("You are not logged in!");
+            }else{
+              alert("you are logged in as " + username);
+            }
+
+        }, function(){
+          alert("Error getting username :(");
+        });
+     };
+
+
      $scope.teapotSubmit = function(){
       $http.post('/teapot', {})
         .then(function(){
@@ -218,6 +237,25 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
         }, function(){
           alert("Error teapotting :(");
         });
+     };
+
+     $scope.numberOfOverdueDeadlines = function(){
+      return $scope.tasks.filter(
+        function(task){
+          var today = new Date();
+          return task.deadline && !task.isComplete && task.deadline < new Date();
+          }
+      ).length;
+     };
+
+     $scope.numberOfDeadlinesNextWeek = function(){
+      return $scope.tasks.filter(
+        function(task){
+          var today = new Date();
+          var sevenDays = today.setDate(today.getDate() + 7);
+          return task.deadline && !task.isComplete && task.deadline < sevenDays && task.deadline > new Date();
+          }
+      ).length;
      };
 
     //debugging methods
@@ -246,9 +284,11 @@ app.service('wowFilters', function(){
 
    this.taskOrdering = function(task){
    		return task.orderingScore;
-   };
+   };   
 
-   
+   this.scheduledToday = function(task){
+      return task.scheduledDate !== null && task._scheduledDate.setHours(0,0,0,0) === (new Date()).setHours(0,0,0,0);
+   };
 
 });
 
@@ -270,6 +310,21 @@ app.directive('input', function() {
             if ('type' in attrs && attrs.type.toLowerCase() === 'range') {
                 ngModel.$parsers.push(parseFloat);
             }
+        }
+    };
+});
+
+app.directive('sidebar', function() {
+    return {
+        link: function(scope, element) {
+            element.bind("keydown",function(event){
+               if(event.keyCode === 27){
+                  getAngularScope().selectedTask = null;
+                  getAngularScope().displayLoginDialog = false;
+                  getAngularScope().displayRegisterDialog = false;
+                  getAngularScope().$apply();
+               }
+            });
         }
     };
 });

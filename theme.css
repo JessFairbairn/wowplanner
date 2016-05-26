@@ -31,3 +31,19 @@ select[multiple] option:hover{
 .sidebar{
 	background-color: #b69fd4;
 }
+
+#viewNavigiation{
+	width:100%;
+	margin:0;
+	padding:0;
+	display:flex;
+}
+
+#viewNavigiation li{
+	flex-grow: 1;
+	background-color: #D9CCEC;
+}
+
+#viewNavigiation li:hover{
+	background-color: #F5F0FB;
+}

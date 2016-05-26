@@ -1,14 +1,15 @@
 angular.module("wowApp").factory('WowTask', function(){
 	// Basic Constructor
-	var constructor = function(title, deadline, priority, isComplete, tags, prerequisites, taskId){
+	var constructor = function(title, deadline, priority, isComplete, tags, prerequisites, taskId, scheduledDate){
 		this.title = title || "";
 		this._deadline = null;
 		this.priority = parseInt(priority) || 3;
 		this.isComplete = isComplete || false;
 		this.tags = tags || [];
 		this.prerequisites = prerequisites || [];
-
 		this.ID = taskId;
+		this._deadline = null;
+		this._scheduledDate = null;
 
 		// Public Methods
 		this.AddTag = function(inputTag){
@@ -37,39 +38,30 @@ angular.module("wowApp").factory('WowTask', function(){
 				}
 			  },        
 			  set: function(newDeadline) {            
-			    if(newDeadline === null){
-			    	this._deadline = newDeadline;
-			    	return;
-			    } else if(newDeadline instanceof Date){
-			    	if(isValidDate(newDeadline)) {
-			    		this._deadline = new Date(newDeadline);
-			    		return;
-			    	}else{
-			    		throw "Deadline setter: invalid date object input";
-			    	}
-			    } else if(typeof newDeadline === "string"){	
-			    	//parses a string date and attempts to save it
-			    	if (new Date(newDeadline).toString() !== "Invalid Date"){
-			    		this._deadline = new Date(newDeadline);
-			    		return;
-			    	}
-		    		var split = newDeadline.split("/");
-					if (split.length != 3) {
-						throw "Deadline string was not in correct format";
-					}
-
-					this._deadline = new Date(split[2], parseInt(split[1])-1, split[0]);
-			    	
-			    } else {
-			    	throw "Deadline setter: New deadline is not in recognised format";
-			    }
+			    this._deadline = constructor.ParseDate(newDeadline);
 			  },               
 			  configurable: false
 		});
 
-
+		Object.defineProperty(this, "scheduledDate", { 
+			  get: function() { 
+			  	if(!this._scheduledDate || this._scheduledDate instanceof Date){
+				  	return this._scheduledDate;
+				} else if(typeof this._scheduledDate === "string"){
+					// liable to be stored as a string as JSON doesn't do dates properly
+					return new Date(this._scheduledDate);
+				} else{
+					throw "Deadline is not stored in a recognised format, localstorage must be corrupted";
+				}
+			  },        
+			  set: function(newScheduledDate) {            
+			    this._scheduledDate = constructor.ParseDate(newScheduledDate);
+			  },               
+			  configurable: false
+		});
 
 		this.deadline = deadline || null;
+		this.scheduledDate = scheduledDate || null;
 
 		Object.defineProperty(this, "orderingScore", { 
 			get: function(){
@@ -101,11 +93,9 @@ angular.module("wowApp").factory('WowTask', function(){
 	   	});
 
 		//Private Properties
-		function isValidDate(d) {
-		  if ( Object.prototype.toString.call(d) !== "[object Date]" )
-		    return false;
-		  return !isNaN(d.getTime());
-		}
+		
+
+		
 	};
 
 	//static methods
@@ -133,6 +123,38 @@ angular.module("wowApp").factory('WowTask', function(){
 	constructor.Sorter = function(taskA,taskB){
 		return 0;
 	};
+
+	constructor.ParseDate= function (newDate) {            
+	    if(newDate === null){
+	    	return null;
+	    } else if(newDate instanceof Date){
+	    	if(this.isValidDate(newDate)) {
+	    		return new Date(newDate);
+	    	}else{
+	    		throw "ParseDate: invalid date object input";
+	    	}
+	    } else if(typeof newDate === "string"){	
+	    	//parses a string date and attempts to save it
+	    	if (new Date(newDate).toString() !== "Invalid Date"){
+	    		return new Date(newDate);
+	    	}
+    		var split = newDate.split("/");
+			if (split.length != 3) {
+				throw "Date string was not in correct format";
+			}
+
+			return new Date(split[2], parseInt(split[1])-1, split[0]);
+	    	
+	    } else {
+	    	throw "ParseDate: New date is not in recognised format";
+	    }
+	};
+
+	constructor.isValidDate = function(d) {
+		  if ( Object.prototype.toString.call(d) !== "[object Date]" )
+		    return false;
+		  return !isNaN(d.getTime());
+		};
 
    //return the constructor
    return constructor;

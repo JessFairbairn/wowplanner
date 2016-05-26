@@ -1,3 +1,7 @@
+function getAngularScope(){
+	return angular.element(document.querySelector("[ng-app]")).scope();
+}
+
 function deleteTaskExternal(event){
 	var scope = angular.element(event.fromElement).scope();
 	var task = scope.task;
@@ -21,4 +25,11 @@ function showOnlyThisTagExternal(event){
 	}
 
 	scope.$apply();
+}
+
+if ('serviceWorker' in navigator) {
+	navigator.serviceWorker.register('serviceworker.js');
+	// .then(function(registration) {
+	// 	// Registration was successful
+	// });
 }

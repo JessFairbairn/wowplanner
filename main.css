@@ -98,6 +98,10 @@ select[multiple] option{
 	flex-grow: 1;
 }
 
+.dumbWrapper{
+	width:100%;
+}
+
 label + input, label + select, button + input, button + select, input + button,
 label input, label select{
 	margin-left:5px;
@@ -120,6 +124,18 @@ label input, label select{
 	opacity: 0.5;
 	background-color: black;
 	z-index: 2;
+}
+
+#viewNavigiation{
+	width:100%;
+	margin:0;
+	padding:0;
+	display:flex;
+}
+
+#viewNavigiation li{
+	flex-grow: 1;
+	text-align: center;
 }
 
 /*Main Area*/
@@ -165,8 +181,7 @@ label input, label select{
 
 wow-task-li, wow-task-li li,
 wow-task-li, wow-task-li li{
-    transition: all 1s;
-    -webkit-transition:all linear 1s;
+    transition: height opacity 1s;
     overflow:hidden;
 }
 
@@ -185,13 +200,13 @@ wow-task-li.ng-enter, wow-task-li.ng-enter *{
 }
 
 wow-task-li.ng-animate.ng-leave, wow-task-li.ng-animate.ng-leave li{
-    opacity: 0;
-    height:0;
+    opacity: 1;
+    height:30px;
 }
 
 wow-task-li.ng-animate.ng-leave-active li{
     opacity: 0;
-    height:0;
+    height:0px;
 }
 
 /*wow-task-li *{

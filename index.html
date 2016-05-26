@@ -2,17 +2,19 @@
 <html>
 <head>
 	<title>Wow Planner!</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-	<!-- <script type="text/javascript" src="../angularjs/angular.min.js"></script> -->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script> -->
+	<script type="text/javascript" src="../angularjs/angular.min.js"></script>
 	<script src="app.js"></script>
 	<script src="services/WowTask.js"></script>
 	<script src="/node_modules/angular-local-storage/src/angular-local-storage.js"></script>
 	<script src="nonAngular.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-animate.min.js"></script>
+	<!-- <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-animate.min.js"></script> -->
+	<script type="text/javascript" src="../angularjs/angular-animate.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="main.css"/>
 	<link rel="stylesheet" type="text/css" href="theme.css"/>
 	<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="manifest" href="manifest.json">
 </head>
 <body ng-app="wowApp" ng-controller="wowController as wowCtrl">
 <div id="modal" ng-show="isModalVisible()" ng-click="modalClick();"></div>
@@ -25,6 +27,7 @@
 			ng-show="!userData">Register</button>
 		<button type="button" ng-click="displayRegisterDialog = true;selectedTask = null;"
 			ng-show="userData">Log Out</button>
+		<button type="button" ng-click="getCurrentUsername()" ng-show="debugMode">Current username</button>
 		<button type="button" ng-click="teapotSubmit()" ng-show="debugMode">Teapot</button>
 		<br>
 		<label><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.all">All Tasks</label><br>
@@ -46,35 +49,59 @@
 		<button ng-click="scopeDump()" ng-show="debugMode">Scope Dump</button>
 		<button ng-click="localStorageDump()" ng-show="debugMode">Local Storage Dump</button>
 	</div>
-
-	<div id="mainArea">
-		<div id="addTaskDiv">
-			<input type="text" ng-model="newTask.title" ng-keydown="returnKeyOverride($event,addTask);" placeholder="Add a task...">
-			<button type="button" ng-click="addTask()">Add Task</button>
-		</div>
-		<ul id="taskList">
-			<wow-task-li  ng-repeat="task in tasks | filter:activeFilter | filter: {isComplete:false} |filter:tagFilter | orderBy:recursiveTaskOrder"/>
+	<div class="dumbWrapper">
+		<ul role="navigation" id="viewNavigiation">
+			<li ng-click="currentView = 'summaryView'" tabindex="0">Summary View</li>
+			<li ng-click="currentView = 'allTasksView'" tabindex="0">All Tasks</li>
 		</ul>
-		<button ng-click="showCompleted = !showCompleted" type="button">
-			Show/Hide Completed Tasks
-		</button>
-		<div id="completedTasks" ng-show="showCompleted">
-			<h3>Completed Tasks</h3>
+		<div id="mainArea">
+		
+		<div id="summaryView" class="view" ng-show="currentView === 'summaryView'">
+			<h2>Hi!</h2>
+			<span ng-show="numberOfOverdueDeadlines();" style="color:red">
+				You have {{numberOfOverdueDeadlines()}} overdue deadlines!!!
+			</span>
+			Tasks for Today:
 			<ul id="taskList">
-				<wow-task-li  ng-repeat="task in tasks | filter:activeFilter | filter: {isComplete:true}"/>
+				<wow-task-li  ng-repeat="task in tasks | filter:filters.scheduledToday | filter: {isComplete:false} | filter:tagFilter | orderBy:recursiveTaskOrder"/>
 			</ul>
+			<span ng-show="numberOfDeadlinesNextWeek();">
+				You have {{numberOfDeadlinesNextWeek()}} deadlines in the next week.
+			</span>
 		</div>
-		<menu type="context" id="taskCtxMenu">
-			<menuitem label="Delete" onclick="deleteTaskExternal(event);"/>
-		</menu>
+		<div id="allTasksView" class="view" ng-show="currentView === 'allTasksView'">
+			<div id="addTaskDiv">
+				<input type="text" ng-model="newTask.title" ng-keydown="returnKeyOverride($event,addTask);" placeholder="Add a task...">
+				<button type="button" ng-click="addTask()">Add Task</button>
+			</div>
+			<ul id="taskList">
+				<wow-task-li  ng-repeat="task in tasks | filter:activeFilter | filter: {isComplete:false} |filter:tagFilter | orderBy:recursiveTaskOrder"/>
+			</ul>
+			<button ng-click="showCompleted = !showCompleted" type="button">
+				{{showCompleted?'Hide':'Show'}} Completed Tasks
+			</button>
+			<div id="completedTasks" ng-show="showCompleted">
+				<h3>Completed Tasks</h3>
+				<ul id="taskList">
+					<wow-task-li  ng-repeat="task in tasks | filter:activeFilter | filter: {isComplete:true}"/>
+				</ul>
+			</div>
+			<menu type="context" id="taskCtxMenu">
+				<menuitem label="Delete" onclick="deleteTaskExternal(event);"/>
+			</menu>
+		</div>
+	</div>
 	</div>
 </div>
 
-<div id="taskEditorDiv" ng-class="{sidebar:true, sidebarHidden:!selectedTask}">
+<div sidebar id="taskEditorDiv" ng-class="{sidebar:true, sidebarHidden:!selectedTask}">
 	
 	<div class="row">
 		<button type="button" ng-click="closeTaskEditor();">Close</button>
 		<input ng-model="selectedTask.title" />
+	</div>
+	<div class="row">
+		<label>Schedule</label><input type="date" ng-model="selectedTask.scheduledDate">
 	</div>
 	<div class="row">
 		<label>Deadline</label><input type="date" ng-model="selectedTask.deadline">
@@ -83,7 +110,7 @@
 		<label>Importance</label><input type="range" ng-model="selectedTask.priority" min="1" max="5">
 	</div>
 	<div class="row">
-		<fieldset>
+		<fieldset ng-show="selectedTask.tags.length">
 			<legend>Tags</legend>
 			<span ng-repeat="tag in selectedTask.tags">
 				{{tag}}<button type="button" ng-click="selectedTask.RemoveTag(tag)">X</button>

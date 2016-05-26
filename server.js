@@ -17,7 +17,7 @@ const funct = require('./authFunctions.js'); //funct file contains our helper fu
 const app = express();
 
 
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 80));
 
 app.use(express.static(__dirname /*+ '/public'*/));
 
@@ -81,9 +81,19 @@ app.post('/login',passport.authenticate('local-signin',
 			res.status(401).send("Authentication Failed");
 		}
 	}
-  ));
+));
 
-app.post('/register', passport.authenticate('local-signup' )
+app.get('/currentUsername', function(req, res, next){
+  //debugger;
+  if(!req.user){
+    res.send({username:null});
+  } else {
+    var name = req.user.username;
+    res.send({username:name});
+  }
+});
+
+app.post('/register', passport.authenticate('local-signup')
 );
 
 app.post('/teapot', function(req, res){
@@ -115,7 +125,7 @@ app.get('/getUsers', function(req, res){
 });
 
 app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+  console.log('WowServer is running on port', app.get('port'));
 });
 
 //===============PASSPORT=================
@@ -135,6 +145,9 @@ passport.use('local-signin', new LocalStrategy(
         req.session.error = 'Could not log user in. Please try again.'; //inform user could not log them in
         done(null, req, false);
       }
+    },
+    function(err){
+      done(err);
     })
     .catch(function (err){
       console.error(err.message);
@@ -167,11 +180,13 @@ passport.use('local-signup', new LocalStrategy(
 
 // Passport session setup.
 passport.serializeUser(function(user, done) {
+  debugger;
   console.log("serializing " + user.username);
   done(null, user);
 });
 
 passport.deserializeUser(function(obj, done) {
+  debugger;
   console.log("deserializing " + obj);
   done(null, obj);
 });
