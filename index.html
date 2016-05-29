@@ -3,7 +3,8 @@
 <head>
 	<title>Wow Planner!</title>
 	<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script> -->
-	<script type="text/javascript" src="../angularjs/angular.min.js"></script>
+	<!-- <script type="text/javascript" src="../angularjs/angular.min.js"></script> -->
+	<script src="/node_modules/angular/angular.min.js"></script>
 	<script src="app.js"></script>
 	<script src="services/WowTask.js"></script>
 	<script src="/node_modules/angular-local-storage/src/angular-local-storage.js"></script>
@@ -35,7 +36,7 @@
 		<br>
 		<fieldset>
 			<legend>Tags</legend>
-			<div ng-repeat="(key, value) in tagMap | orderBy:(key)" class=row contextmenu="tagMenu">
+			<div ng-repeat="(key, value) in tagMap" class=row contextmenu="tagMenu">
 				<input type="checkbox" ng-model="tagMap[key]" ng-attr-id="{{'toggleTag' + $index}}">
 				<label ng-attr-for="{{'toggleTag' + $index}}">{{key}}</label>
 			</div>
