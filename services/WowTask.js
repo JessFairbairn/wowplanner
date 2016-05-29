@@ -14,6 +14,9 @@ angular.module("wowApp").factory('WowTask', function(){
 		// Public Methods
 		this.AddTag = function(inputTag){
 			if(inputTag === undefined){
+				if(!this.newTag){
+					return;
+				}
 				this.tags.push(this.newTag);
 				this.newTag = "";
 			} else if(inputTag){
@@ -59,6 +62,10 @@ angular.module("wowApp").factory('WowTask', function(){
 			  },               
 			  configurable: false
 		});
+
+		this.scheduleForToday = function(){
+			this.scheduledDate = new Date();
+		};
 
 		this.deadline = deadline || null;
 		this.scheduledDate = scheduledDate || null;

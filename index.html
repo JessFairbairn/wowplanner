@@ -42,6 +42,7 @@
 
 		<menu type="context" id="tagMenu">
 			<menuitem label="Show Only This" onclick="showOnlyThisTagExternal(event);"/>
+			<menuitem label="Delete This Tag" onclick="deleteThisTagExternal(event);"/>
 		</menu>
 		</fieldset>
 		<br><br>
@@ -61,9 +62,9 @@
 			<span ng-show="numberOfOverdueDeadlines();" style="color:red">
 				You have {{numberOfOverdueDeadlines()}} overdue deadlines!!!
 			</span>
-			Tasks for Today:
+			<h3 ng-show="(tasks|filter:filters.scheduledToday).length">Tasks for Today:</h3>
 			<ul id="taskList">
-				<wow-task-li  ng-repeat="task in tasks | filter:filters.scheduledToday | filter: {isComplete:false} | filter:tagFilter | orderBy:recursiveTaskOrder"/>
+				<wow-task-li  ng-repeat="task in tasks | filter:filters.scheduledToday | filter:tagFilter | orderBy:recursiveTaskOrder"/>
 			</ul>
 			<span ng-show="numberOfDeadlinesNextWeek();">
 				You have {{numberOfDeadlinesNextWeek()}} deadlines in the next week.
@@ -101,7 +102,17 @@
 		<input ng-model="selectedTask.title" />
 	</div>
 	<div class="row">
-		<label>Schedule</label><input type="date" ng-model="selectedTask.scheduledDate">
+		<label>Schedule</label>
+		<button type="button" ng-click="selectedTask.scheduleForToday()"
+			ng-show="!selectedTask.scheduledDate && !showSchedulePicker">
+			Schedule for today
+		</button>
+		<button type="button" ng-click="showSchedulePicker = true;"
+			ng-show="!selectedTask.scheduledDate && !showSchedulePicker">
+			Schedule for another day
+		</button>
+		<input type="date" ng-model="selectedTask.scheduledDate"
+			ng-show="selectedTask.scheduledDate || showSchedulePicker">
 	</div>
 	<div class="row">
 		<label>Deadline</label><input type="date" ng-model="selectedTask.deadline">

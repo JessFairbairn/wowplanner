@@ -27,6 +27,25 @@ function showOnlyThisTagExternal(event){
 	scope.$apply();
 }
 
+function deleteThisTagExternal(event){
+	var scope = angular.element(event.fromElement).scope();
+	var tagKey = scope.key;
+	
+	console.debug("Deleting tag: " + tagKey);
+	scope.$parent.deleteTag(tagKey);
+	
+	// var tagNames = Object.getOwnPropertyNames(tagMap);
+	// for (var i = tagNames.length - 1; i >= 0; i--) {
+	// 	if(tagNames[i] === tagKey){
+	// 		tagMap[tagNames[i]] = true;
+	// 	} else {
+	// 		tagMap[tagNames[i]] = false;
+	// 	}
+	// }
+
+	scope.$apply();
+}
+
 if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('serviceworker.js');
 	// .then(function(registration) {

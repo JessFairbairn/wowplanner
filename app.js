@@ -38,7 +38,7 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 
 	$scope.activeFilter = $scope.filters.all;
 
-  $scope.currentView = 'summaryView';
+   $scope.currentView = 'summaryView';
 
 	$scope.newTask = new WowTask();
 
@@ -55,20 +55,28 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
    		}
    	};
 
-   	$scope.recursiveTaskOrder = function(task){
-   		var currentScore = task.orderingScore;
-   		for (var i = $scope.tasks.length - 1; i >= 0; i--) {
-   			var childTask = $scope.tasks[i];
+   	$scope.recursiveTaskOrder = function(task, recursionLevel){
+      if(!recursionLevel){
+        recursionLevel = 0;
+      }
+      if(recursionLevel > 10){
+        throw "Too much recursion!";
+      }
+		var currentScore = task.orderingScore;
+      var hasDependents = false;
+		for (var i = $scope.tasks.length - 1; i >= 0; i--) {
+			var childTask = $scope.tasks[i];
 
-   			if(childTask.prerequisites.indexOf(task.ID)>-1){
-   				var childScore = childTask.orderingScore;
-   				if(currentScore>childScore){
-   					currentScore = childScore;
-   				}
-   			}
-   		}
-
-   		return currentScore - 0.001;//to make sure it's above the dependant task
+			if(childTask.prerequisites.indexOf(task.ID)>-1){
+            hasDependents = true;
+				var childScore = $scope.recursiveTaskOrder(childTask,recursionLevel + 1);
+				if(currentScore>childScore){
+					currentScore = childScore;
+				}
+			}
+		}
+      if(hasDependents)currentScore -= 0.001;
+   		return currentScore;//to make sure it's above the dependant task
    	};
 
 	/*UI Functions*/
@@ -112,6 +120,7 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
     	$scope.selectedTask = null;
       $scope.displayLoginDialog = false;
       $scope.displayRegisterDialog = false;
+      $scope.showSchedulePicker = false;
     };
 
     $scope.displayLoginDiv = false;
@@ -158,6 +167,18 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
    		}   		
    	}
    	return false;
+   };
+
+   $scope.deleteTag = function(tagName){
+      for (var i = $scope.tasks.length - 1; i >= 0; i--) {
+         var task = $scope.tasks[i];
+         var idx = task.tags.indexOf(tagName);
+         if(idx > -1){
+            task.tags.splice(idx,1);
+         }
+      }
+
+      delete $scope.tagMap[tagName];
    };
 
    $scope.preReqFilter = function(preReq){
