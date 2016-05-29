@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "angular": "^1.5.6",
+    "angular-animate": "^1.5.6",
     "angular-local-storage": "0.2.6",
     "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.0",
