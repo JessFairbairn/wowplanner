@@ -1,0 +1,7 @@
+{  
+  "name": "WowPlanner",  
+  "short_name": "WowPlanner", 
+    "start_url": "/index.html",  
+    "display": "standalone"
+    
+  }
