@@ -7,14 +7,20 @@ var app = angular.module("wowApp",['LocalStorageModule',/* 'ngAnimate'*/])
   localStorageServiceProvider.setPrefix('ls');
 }]);
 
-app.controller("wowController", ["$scope","$http","localStorageService","wowFilters","WowTask",
-    function($scope,$http,localStorageService,wowFilters,WowTask) {
+app.controller("wowController", ["$scope","$http","localStorageService","wowFilters","WowTask","webService",
+    function($scope,$http,localStorageService,wowFilters,WowTask,webService) {
 	//initialise variables
 	$scope.isModalVisible = function() {
 		return $scope.selectedTask || $scope.displayLoginDialog || $scope.displayRegisterDialog;
 	};
 
   $scope.userData = null;
+
+  webService.getCurrentUsername().then(function(res){
+    $scope.userData = res.data;
+  }, function(err){
+    console.error(err);
+  });
 
 	var todosInStore = localStorageService.get('tasks');
 	$scope.tasks = [];
@@ -38,7 +44,7 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 
 	$scope.activeFilter = $scope.filters.all;
 
-   $scope.currentView = 'summaryView';
+  $scope.currentView = 'summaryView';
 
 	$scope.newTask = new WowTask();
 
@@ -234,8 +240,8 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
      };
 
      $scope.getCurrentUsername = function(){
-      $http.get('/currentUsername', {})
-        .then(function(res){
+      
+        webService.getCurrentUsername().then(function(res){
             var username = res.data.username;
             if(username === null){
               alert("You are not logged in!");

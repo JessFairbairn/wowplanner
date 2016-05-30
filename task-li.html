@@ -4,7 +4,7 @@
 	<button type="button" class="delete" ng-click="deleteTask(task);$event.stopPropagation();">
 		<span class="fa fa-trash-o"></span>
 	</button>
-	<span style="float:right" ng-if="debugMode">
+	<span style="float:right" ng-if="false&&debugMode">
 		{{recursiveTaskOrder(task)}}
 	</span>
 	<span style="float:right;" class="fa fa-calendar-o" ng-if="task.deadline"></span>

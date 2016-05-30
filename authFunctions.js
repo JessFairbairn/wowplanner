@@ -45,7 +45,7 @@ exports.localAuth = function (username, password) {
          }
          
          if (bcrypt.compareSync(password, hash)) {
-            return result;
+            return result._doc;
          } else {
             return null;
          }

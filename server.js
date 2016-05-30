@@ -67,15 +67,19 @@ app.get('/', function(req, res) {
 
 app.post('/login',passport.authenticate('local-signin', 
 	function(err, req, user) {
-		//THIS IS PROBABLY ALL WRONG BUT OH WELL
+		//THIS IS NOW SLIGHTLY LESS WRONG
 		const res = req.res;
 		
 		if(err || !res){
 			res.sendStatus(500);
 		}
 		else if(user !== false){
-			res.send("Successfully Logged In");
-			//TODO: Load app data
+      req.login(user, function(err, next) {
+        if (err) { 
+          return next(err); 
+        }
+        res.send('Logged in as ' + user.username);
+      });
 		}else{
 			//failed authentication
 			res.status(401).send("Authentication Failed");
@@ -180,13 +184,11 @@ passport.use('local-signup', new LocalStrategy(
 
 // Passport session setup.
 passport.serializeUser(function(user, done) {
-  debugger;
   console.log("serializing " + user.username);
   done(null, user);
 });
 
 passport.deserializeUser(function(obj, done) {
-  debugger;
   console.log("deserializing " + obj);
   done(null, obj);
 });
