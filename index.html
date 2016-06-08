@@ -15,6 +15,7 @@
 	<script src="/node_modules/angular-animate/angular-animate.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="main.css"/>
 	<link rel="stylesheet" type="text/css" href="theme.css"/>
+	<link rel="stylesheet" type="text/css" href="responsive.css"/>
 	<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	<link rel="manifest" href="manifest.json">
@@ -25,14 +26,16 @@
 	<div id="filterDiv">
 		<h1>Wow Planner</h1>
 		<button type="button" ng-click="displayLoginDialog = true;selectedTask = null;"
-			 ng-show="!userData">Login</button>
+			 ng-show="!userData.username">Login</button>
 		<button type="button" ng-click="displayRegisterDialog = true;selectedTask = null;"
-			ng-show="!userData">Register</button>
-		<button type="button" ng-click="displayRegisterDialog = true;selectedTask = null;"
-			ng-show="userData">Log Out</button>
+			ng-show="!userData.username">Register</button>
+		<button type="button" ng-click="logoutSubmit();"
+			ng-show="userData.username">Log Out</button>
 		<button type="button" ng-click="getCurrentUsername()" ng-show="debugMode">Current username</button>
+		<span ng-show="debugMode">userData: {{userData}}</span>
 		<button type="button" ng-click="teapotSubmit()" ng-show="debugMode">Teapot</button>
 		<br>
+		<div id="filterWrapper">
 		<label><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.all">All Tasks</label><br>
 		<label><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.dueToday">Due Today</label>
 		<br>
@@ -52,6 +55,7 @@
 		<button ng-click="debugMode = !debugMode;">Toggle Debugging</button>
 		<button ng-click="scopeDump()" ng-show="debugMode">Scope Dump</button>
 		<button ng-click="localStorageDump()" ng-show="debugMode">Local Storage Dump</button>
+		</div>
 	</div>
 	<div class="dumbWrapper">
 		<ul role="navigation" id="viewNavigiation">

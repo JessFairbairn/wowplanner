@@ -236,6 +236,7 @@ wow-task-li.ng-animate.ng-leave-active li{
 .sidebar{
 	height:100%;
 	width:500px;
+	max-width: 100%;
 	box-sizing:border-box;
 	position:fixed;
 	right:0;

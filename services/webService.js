@@ -1,6 +1,6 @@
-var app = angular.module("wowApp");
+var module = angular.module("WebModule",[]);
 
-app.service('webService', ["$http",function($http){
+module.service('webService', ["$http",function($http){
    
    this.getCurrentUsername = function() {
     	return $http.get('/currentUsername', {});

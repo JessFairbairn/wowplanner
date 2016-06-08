@@ -78,9 +78,9 @@ app.post('/login',passport.authenticate('local-signin',
         if (err) { 
           return next(err); 
         }
-        res.send('Logged in as ' + user.username);
+        res.send({username: user.username});
       });
-		}else{
+		} else {
 			//failed authentication
 			res.status(401).send("Authentication Failed");
 		}
@@ -104,15 +104,25 @@ app.post('/teapot', function(req, res){
 	res.status(402).json("lol");
 });
 
-app.get('/logout', function(req, res){
+app.post('/logout', function(req, res){
 	var name = req.user.username;
 	console.log("LOGGIN OUT " + req.user.username);
 	req.logout();
 	//res.redirect('/');
 	req.session.notice = "You have successfully been logged out " + name + "!";
+  res.send("You have successfully been logged out.");
 });
 
 app.get('/getUsers', function(req, res){
+  if(!req.user){
+    res.status(401).json("not logged in!");
+  } 
+
+  var name = req.user.username;
+  if(name !== "admin"){
+    res.status(401).json("No permission to see admin pages");
+  }
+
 	var users;
 	return db.User.find({}).exec().then(function (usersFound) {
 		users = usersFound;
@@ -178,6 +188,7 @@ passport.use('local-signup', new LocalStrategy(
     })
     .catch(function (err){
       console.error(err.message);
+      done(err);
     });
   }
 ));
@@ -189,6 +200,6 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(obj, done) {
-  console.log("deserializing " + obj);
+  console.log("deserializing " + obj.username);
   done(null, obj);
 });

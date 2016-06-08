@@ -1,0 +1,18 @@
+@media (max-width: 500px) {
+	#mainWrapper{
+		display:block;
+	}
+
+	#filterDiv{
+		height:initial;
+		width:100%;
+	}
+
+  #filterWrapper{
+  	display:none;
+  }
+
+  /*h1{
+  	text-align:center;
+  }*/
+}

@@ -2,7 +2,7 @@
 /* global angular, getAngularScope*/
 
 "use strict";
-var app = angular.module("wowApp",['LocalStorageModule',/* 'ngAnimate'*/])
+var app = angular.module("wowApp",['LocalStorageModule',"WebModule",/* 'ngAnimate'*/])
 .config(['localStorageServiceProvider', function(localStorageServiceProvider){
   localStorageServiceProvider.setPrefix('ls');
 }]);
@@ -204,7 +204,7 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
         .then(function(res){            
             //success logging in
             //do something magical with res.data
-            $scope.userData = {};
+            $scope.userData = res.data;
             $scope.displayLoginDialog = false;
 
         }, function(res){
@@ -229,7 +229,7 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
      };
 
      $scope.logoutSubmit = function(){
-      $http.post('/logout', $scope.registrationDetails)
+      $http.post('/logout',{})
         .then(function(){
             $scope.userData = null;
             alert("You have been logged out");
