@@ -14,7 +14,17 @@ mongoose.Promise = global.Promise;
 const userSchema = mongoose.Schema({
 	username: String,
 	passwordHash: String,
-	email: String
+	email: String,
+	tasks: [{
+		ID: Number,
+		title: String,
+		deadline: Date,
+		priority: Number,
+		isComplete: Boolean,
+		tags: [String],
+		prerequisites:[Number],
+		scheduledDate: Date
+	}]
 });
 
 exports.User = mongoose.model("User",userSchema);

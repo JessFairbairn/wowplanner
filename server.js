@@ -104,6 +104,31 @@ app.post('/teapot', function(req, res){
 	res.status(402).json("lol");
 });
 
+// Task Methods
+app.post('/task', function(req, res){
+  if(!req.user){
+    res.sendStatus(401);
+    return;
+  }
+
+  const task = req.body;
+  return db.User.findOne({ username: req.user.username }).exec()
+  .then(function (user){ 
+      if(!user){
+        throw "Trying to add task to logged in user but can't find in database";
+      }
+      //var dbUser = user[0];
+      //dbUser._doc.tasks.push(task);
+      db.User.update(
+         { _id: user._id },
+         { $addToSet: { tasks: task } }
+      );
+      //dbUser.save();
+      res.sendStatus(200);    
+    }
+  );
+});
+
 app.post('/logout', function(req, res){
 	var name = req.user.username;
 	console.log("LOGGIN OUT " + req.user.username);
@@ -113,6 +138,7 @@ app.post('/logout', function(req, res){
   res.send("You have successfully been logged out.");
 });
 
+//ADMIN METHODS
 app.get('/getUsers', function(req, res){
   if(!req.user){
     res.status(401).json("not logged in!");

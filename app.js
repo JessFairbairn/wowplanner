@@ -256,13 +256,24 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 
 
      $scope.teapotSubmit = function(){
-      $http.post('/teapot', {})
+      $http.post('/teapot', {lol:null})
         .then(function(){
             //success logging in 
             //alert("registered(!?)");
 
         }, function(){
           alert("Error teapotting :(");
+        });
+     };
+
+     $scope.taskSubmit = function(){
+      $http.post('/task', $scope.selectedTask)
+        .then(function(){
+            //success logging in 
+            //alert("registered(!?)");
+
+        }, function(){
+          alert("Error uploading task :(");
         });
      };
 

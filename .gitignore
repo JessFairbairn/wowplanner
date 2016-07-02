@@ -1,0 +1,7 @@
+wowpublish.sh
+openPlanner.sh
+launchEnv.sh
+
+*~
+
+node_modules
