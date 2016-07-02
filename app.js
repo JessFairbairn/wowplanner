@@ -2,7 +2,7 @@
 /* global angular, getAngularScope*/
 
 "use strict";
-var app = angular.module("wowApp",['LocalStorageModule',"WebModule",/* 'ngAnimate'*/])
+var app = angular.module("wowApp",['LocalStorageModule',"WebModule",/* 'ngAnimate'*/,'angular-date-picker-polyfill'])
 .config(['localStorageServiceProvider', function(localStorageServiceProvider){
   localStorageServiceProvider.setPrefix('ls');
 }]);

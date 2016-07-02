@@ -3,5 +3,6 @@ openPlanner.sh
 launchEnv.sh
 
 *~
+examples/
 
 node_modules

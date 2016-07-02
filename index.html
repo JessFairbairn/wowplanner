@@ -3,7 +3,6 @@
 <head>
 	<title>Wow Planner!</title>
 	<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script> -->
-	<!-- <script type="text/javascript" src="../angularjs/angular.min.js"></script> -->
 	<script src="/node_modules/angular/angular.min.js"></script>
 	<script src="app.js"></script>
 	<script src="services/WowTask.js"></script>
@@ -119,10 +118,10 @@
 			Schedule for another day
 		</button>
 		<input type="date" ng-model="selectedTask.scheduledDate"
-			ng-show="selectedTask.scheduledDate || showSchedulePicker">
+			ng-show="selectedTask.scheduledDate || showSchedulePicker" date-format="dd/mm/yyyy">
 	</div>
 	<div class="row">
-		<label>Deadline</label><input type="date" ng-model="selectedTask.deadline">
+		<label>Deadline</label><input type="date" ng-model="selectedTask.deadline" date-format="dd/mm/yyyy">
 	</div>
 	<div class="row">
 		<label>Importance</label><input type="range" ng-model="selectedTask.priority" min="1" max="5">
@@ -187,6 +186,7 @@
 		</div>
 	</form>
 </div>
-
+<script type="text/javascript" src="/scripts/modernizr-custom.js"></script>
+	<script type="text/javascript" src="/scripts/angular-date-picker-polyfill/dist/angular-date-picker-polyfill.min.js"></script>
 </body>
 </html>
