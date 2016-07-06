@@ -23,7 +23,10 @@ const userSchema = mongoose.Schema({
 		isComplete: Boolean,
 		tags: [String],
 		prerequisites:[Number],
-		scheduledDate: Date
+		scheduledDate: Date,
+
+		//generated serverside:
+		serverID: String
 	}]
 });
 

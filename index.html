@@ -32,7 +32,7 @@
 			ng-show="userData.username">Log Out</button>
 		<button type="button" ng-click="getCurrentUsername()" ng-show="debugMode">Current username</button>
 		<span ng-show="debugMode">userData: {{userData}}</span>
-		<button type="button" ng-click="teapotSubmit()" ng-show="debugMode">Teapot</button>
+		<button type="button" ng-click="downloadTasks()" ng-show="debugMode">Log Tasks</button>
 		<br>
 		<div id="filterWrapper">
 		<label><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.all">All Tasks</label><br>
@@ -68,6 +68,16 @@
 			<span ng-show="numberOfOverdueDeadlines();" style="color:red">
 				You have {{numberOfOverdueDeadlines()}} overdue deadlines!!!
 			</span>
+
+			<div id="addTaskDiv">
+				<input type="text" ng-model="newTask.title" ng-keydown="returnKeyOverride($event,addTask);" 
+				placeholder="Add a task for today..." list="existingTasksToScheduleList">
+				<button type="button" ng-click="addTaskForToday()">Add Task</button>
+			</div>
+			<datalist id="existingTasksToScheduleList">
+				<option ng-repeat="task in (tasks|filter:filters.notCompleted)" ng-value="task"><!-- {{task.title}} --></option>
+			</datalist>
+
 			<h3 ng-show="(tasks|filter:filters.scheduledToday).length">Tasks for Today:</h3>
 			<ul id="taskList">
 				<wow-task-li  ng-repeat="task in tasks | filter:filters.scheduledToday | filter:tagFilter | orderBy:recursiveTaskOrder"/>
@@ -75,6 +85,10 @@
 			<span ng-show="numberOfDeadlinesNextWeek();">
 				You have {{numberOfDeadlinesNextWeek()}} deadlines in the next week.
 			</span>
+			<h3 ng-show="!numberOfOverdueDeadlines()">Your top priority tasks:</h3>
+			<ul id="taskList">
+				<wow-task-li  ng-repeat="task in tasks | filter:filters.notComplete|orderBy:recursiveTaskOrder | limitTo: 5"/>
+			</ul>
 		</div>
 		<div id="allTasksView" class="view" ng-show="currentView === 'allTasksView'">
 			<div id="addTaskDiv">

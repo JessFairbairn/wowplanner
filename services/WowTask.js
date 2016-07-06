@@ -10,6 +10,8 @@ angular.module("wowApp").factory('WowTask', function(){
 		this.ID = taskId;
 		this._deadline = null;
 		this._scheduledDate = null;
+		this.synced = false;
+		this.serverID = null;
 
 		// Public Methods
 		this.AddTag = function(inputTag){

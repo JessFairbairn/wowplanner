@@ -28,9 +28,9 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 		for (var i = todosInStore.length - 1; i >= 0; i--) {
 			var jsonTask = todosInStore[i];
 
-			$scope.tasks.push(
-				new WowTask(jsonTask.title, jsonTask._deadline,jsonTask.priority, jsonTask.isComplete, jsonTask.tags, jsonTask.prerequisites, jsonTask.ID, jsonTask._scheduledDate)
-			);
+      var jsTask = new WowTask(jsonTask.title, jsonTask._deadline,jsonTask.priority, jsonTask.isComplete, jsonTask.tags, jsonTask.prerequisites, jsonTask.ID, jsonTask._scheduledDate);
+      jsTask.synced = !!jsonTask.synced;
+			$scope.tasks.push(jsTask);
 		}
 	}
 
@@ -90,6 +90,12 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
     $scope.addTask = function(){
     	$scope.tasks.push($scope.newTask);
     	$scope.newTask = new WowTask();
+    };
+
+    $scope.addTaskForToday = function(){
+      $scope.newTask.scheduledDate = new Date();
+      $scope.tasks.push($scope.newTask);
+      $scope.newTask = new WowTask();
     };
 
     $scope.deleteTask = function(task){
@@ -267,20 +273,32 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
      };
 
      $scope.taskSubmit = function(){
-      $http.post('/task', $scope.selectedTask)
-        .then(function(){
-            //success logging in 
-            //alert("registered(!?)");
+        uploadTask($scope.selectedTask);
+     };
+
+     $scope.downloadTasks = function(){
+        webService.getTasks()
+        .then(function(res){
+            console.debug(res.data);
+        }, function(){
+          alert("Error downloading tasks :(");
+        });
+     };
+
+     function uploadTask(task){
+      $http.post('/task', task)
+        .then(function(res){
+            task.synced = true;
+            task.serverID = res.data;
 
         }, function(){
           alert("Error uploading task :(");
         });
-     };
+      }
 
      $scope.numberOfOverdueDeadlines = function(){
       return $scope.tasks.filter(
         function(task){
-          var today = new Date();
           return task.deadline && !task.isComplete && task.deadline < new Date();
           }
       ).length;
@@ -327,6 +345,10 @@ app.service('wowFilters', function(){
    this.scheduledToday = function(task){
       return task.scheduledDate !== null && task._scheduledDate.setHours(0,0,0,0) === (new Date()).setHours(0,0,0,0);
    };
+
+   this.notComplete = function(task){
+      return !task.isComplete;
+   };   
 
 });
 

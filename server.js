@@ -117,17 +117,53 @@ app.post('/task', function(req, res){
       if(!user){
         throw "Trying to add task to logged in user but can't find in database";
       }
-      //var dbUser = user[0];
-      //dbUser._doc.tasks.push(task);
-      db.User.update(
-         { _id: user._id },
-         { $addToSet: { tasks: task } }
-      );
-      //dbUser.save();
-      res.sendStatus(200);    
+      var serverID = makeId();
+      var existingTasks = user._doc.tasks;
+      if(existingTasks.filter(function(oldTask){return oldTask.serverID === serverID;}).length){
+        throw "Tried to add duplicate serverID, you really ought to handle this";
+      }
+      task.serverID = serverID;
+
+      // var result = db.User.update(
+      //    { _id: user._id },
+      //    { $addToSet: { tasks: task } }
+      // )
+
+      user.tasks.set(user.tasks.length, task);
+      user.save();
+      
+      res.send(serverID);    
     }
   );
 });
+
+app.get('/tasks', function(req, res){
+  if(!req.user){
+    res.sendStatus(401);
+    return;
+  }
+
+  return db.User.findOne({ username: req.user.username }).exec()
+  .then(function (user){ 
+      if(!user){
+        throw "Trying to add task to logged in user but can't find in database";
+      }
+      
+      res.send(user._doc.tasks);    
+    }
+  );
+});
+
+function makeId()
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 6; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
 
 app.post('/logout', function(req, res){
 	var name = req.user.username;

@@ -6,6 +6,8 @@ module.service('webService', ["$http",function($http){
     	return $http.get('/currentUsername', {});
    };
 
-   
+   this.getTasks = function(){
+   	return $http.get("/tasks");
+   };
 
 }]);

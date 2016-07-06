@@ -7,5 +7,6 @@
 	<span style="float:right" ng-if="false&&debugMode">
 		{{recursiveTaskOrder(task)}}
 	</span>
+	<span style="float:right"  class="fa fa-refresh" title="Not Synced!" ng-if="!task.synced && debugMode"></span>
 	<span style="float:right;" class="fa fa-calendar-o" ng-if="task.deadline"></span>
 </li>
