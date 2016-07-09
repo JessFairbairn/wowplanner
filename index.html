@@ -33,6 +33,7 @@
 		<button type="button" ng-click="getCurrentUsername()" ng-show="debugMode">Current username</button>
 		<span ng-show="debugMode">userData: {{userData}}</span>
 		<button type="button" ng-click="downloadTasks()" ng-show="debugMode">Log Tasks</button>
+		<button type="button" ng-click="deleteAllTasksOnServer()" ng-show="debugMode">Delete Tasks on server</button>
 		<br>
 		<div id="filterWrapper">
 		<label><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.all">All Tasks</label><br>
@@ -70,7 +71,7 @@
 			</span>
 
 			<div id="addTaskDiv">
-				<input type="text" ng-model="newTask.title" ng-keydown="returnKeyOverride($event,addTask);" 
+				<input type="text" ng-model="newTask.title" ng-keydown="returnKeyOverride($event,addTaskForToday);" 
 				placeholder="Add a task for today..." list="existingTasksToScheduleList">
 				<button type="button" ng-click="addTaskForToday()">Add Task</button>
 			</div>
@@ -201,6 +202,6 @@
 	</form>
 </div>
 <script type="text/javascript" src="/scripts/modernizr-custom.js"></script>
-	<script type="text/javascript" src="/scripts/angular-date-picker-polyfill/dist/angular-date-picker-polyfill.min.js"></script>
+	<script type="text/javascript" src="/scripts/angular-date-picker-polyfill.min.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <li ng-click="taskClick(task)" contextmenu="taskCtxMenu" draggable="true">
-	<input type="checkbox" ng-model="task.isComplete" ng-click="$event.stopPropagation();">
+	<input type="checkbox" ng-model="task.isComplete" ng-click="task.synced = false;$event.stopPropagation();">
 	<span class="taskText">{{task.title}}</span>
 	<button type="button" class="delete" ng-click="deleteTask(task);$event.stopPropagation();">
 		<span class="fa fa-trash-o"></span>

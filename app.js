@@ -38,6 +38,41 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 	  localStorageService.set('tasks', $scope.tasks);
 	}, true);
 
+  $scope.$watch('selectedTask', function(newObj,oldObj){
+
+    if(newObj && oldObj){
+
+      var properties = WowTask.propertiesToSynch;
+
+      for (var i = properties.length - 1; i >= 0; i--) {
+        var prop = properties[i];
+
+        //comparison logic
+        var newVal,oldVal;
+        if(oldObj[prop] instanceof Date){
+          newVal = newObj[prop].getTime();
+          oldVal = oldObj[prop].getTime();
+        }
+        else if( Array.isArray(oldObj[prop]) ){
+          newVal = newObj[prop].toString();
+          oldVal = oldObj[prop].toString();
+        }
+        else{
+          newVal = newObj[prop];
+          oldVal = oldObj[prop];
+        }
+
+        if(newVal !== oldVal){
+          console.log(prop + " has changed " + oldObj[prop] + " -> " + newObj[prop]);
+          newObj.synced = false;
+          return;
+        }
+
+      }
+
+    }
+  },true);
+
 	WowTask.AssignIds($scope.tasks);
 
 	$scope.filters = wowFilters;
@@ -51,6 +86,8 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 	$scope.showCompleted = false;
 
 	$scope.debugMode = false;
+
+  $scope.selectedTask = null;
 
 	$scope.findTaskById = function(ID){
    		for (var i = $scope.tasks.length - 1; i >= 0; i--) {
@@ -295,6 +332,23 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
           alert("Error uploading task :(");
         });
       }
+
+      $scope.deleteAllTasksOnServer=function(){
+        if(!confirm("DANGEROUS! Are you sure you want to delete all tasks on the server?")){
+          return;
+        }
+
+        $http.delete('/tasks/all')
+        .then(function(){
+            for (var i = $scope.tasks.length - 1; i >= 0; i--) {
+              $scope.tasks[i].synced = false;
+              $scope.tasks[i].serverID = null;
+            }
+
+        }, function(){
+          alert("Error deleting tasks :(");
+        });
+      };
 
      $scope.numberOfOverdueDeadlines = function(){
       return $scope.tasks.filter(

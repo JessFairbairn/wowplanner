@@ -165,6 +165,15 @@ angular.module("wowApp").factory('WowTask', function(){
 		  return !isNaN(d.getTime());
 		};
 
+	constructor.propertiesToSynch = 
+		["priority",
+		"_deadline",
+		"_scheduledDate",
+		"title",
+		"tags",
+		"prerequisites",
+		"isComplete"];
+
    //return the constructor
    return constructor;
    

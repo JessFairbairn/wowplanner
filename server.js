@@ -154,6 +154,25 @@ app.get('/tasks', function(req, res){
   );
 });
 
+app.delete('/tasks/all', function(req, res){
+  if(!req.user){
+    res.sendStatus(401);
+    return;
+  }
+
+  return db.User.findOne({ username: req.user.username }).exec()
+  .then(function (user){ 
+      if(!user){
+        throw "Trying to add task to logged in user but can't find in database";
+      }      
+      
+      user.tasks = [];
+      user.save(); 
+      res.sendStatus(200);
+    }
+  );
+});
+
 function makeId()
 {
     var text = "";
