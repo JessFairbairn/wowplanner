@@ -3,6 +3,11 @@ openPlanner.sh
 launchEnv.sh
 
 *~
+*.log
+
+
+
 examples/
 
 node_modules
+fonts
