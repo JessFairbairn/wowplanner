@@ -30,6 +30,7 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 
       var jsTask = new WowTask(jsonTask.title, jsonTask._deadline,jsonTask.priority, jsonTask.isComplete, jsonTask.tags, jsonTask.prerequisites, jsonTask.ID, jsonTask._scheduledDate);
       jsTask.synced = !!jsonTask.synced;
+      jsTask.serverID = jsonTask.serverID;
 			$scope.tasks.push(jsTask);
 		}
 	}
@@ -98,7 +99,7 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
     }
 
     var task = $scope.tasks.filter(function(task){
-      return task.synced === false && !task.serverID;
+      return task.synced === false;
     })[0];
 
     if(task){
@@ -333,6 +334,15 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 
      $scope.downloadTasks = function(){
         webService.getTasks()
+        .then(function(res){
+            console.debug(res.data);
+        }, function(){
+          alert("Error downloading tasks :(");
+        });
+     };
+
+     $scope.downloadThisTask = function(task){
+        $http.get("/tasks/" + task.serverID)
         .then(function(res){
             console.debug(res.data);
         }, function(){

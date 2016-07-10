@@ -18,12 +18,12 @@ const userSchema = mongoose.Schema({
 	tasks: [{
 		ID: Number,
 		title: String,
-		deadline: Date,
+		_deadline: Date,
 		priority: Number,
 		isComplete: Boolean,
 		tags: [String],
 		prerequisites:[Number],
-		scheduledDate: Date,
+		_scheduledDate: Date,
 
 		//generated serverside:
 		serverID: String

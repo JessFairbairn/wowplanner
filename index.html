@@ -30,9 +30,6 @@
 			ng-show="!userData.username">Register</button>
 		<button type="button" ng-click="logoutSubmit();"
 			ng-show="userData.username">Log Out</button>
-		<button type="button" ng-click="getCurrentUsername()" ng-show="debugMode">Current username</button>
-		<span ng-show="debugMode">userData: {{userData}}</span>
-		<button type="button" ng-click="downloadTasks()" ng-show="debugMode">Log Tasks</button>
 		<button type="button" ng-click="deleteAllTasksOnServer()" ng-show="debugMode">Delete Tasks on server</button>
 		<br>
 		<div id="filterWrapper">
@@ -166,6 +163,7 @@
 	<div class="row" ng-show="debugMode">	
 		<button ng-click="taskSubmit()">Submit To Server</button>
 		<button ng-click="taskDump()">Task Dump</button>
+		<button ng-click="downloadThisTask(selectedTask)">Log server copy of task</button>
 	</div>
 </div>
 

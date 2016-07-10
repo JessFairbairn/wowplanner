@@ -150,7 +150,7 @@ app.post('/task', function(req, res){
 
         var existingTask = user.tasks[i];
         
-        user.tasks.set(user.tasks.length, task);
+        user.tasks.set(i, task);
         user.save();
       }
       
@@ -177,6 +177,7 @@ app.get('/tasks', function(req, res){
 });
 
 app.get('/tasks/:requestedServerId', function(req, res){
+  "use strict";
   if(!req.user){
     res.sendStatus(401);
     return;
