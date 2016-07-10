@@ -113,24 +113,46 @@ app.post('/task', function(req, res){
 
   const task = req.body;
   return db.User.findOne({ username: req.user.username }).exec()
-  .then(function (user){ 
+  .then(function (user){
+    "use strict";
       if(!user){
         throw "Trying to add task to logged in user but can't find in database";
       }
-      var serverID = makeId();
-      var existingTasks = user._doc.tasks;
-      if(existingTasks.filter(function(oldTask){return oldTask.serverID === serverID;}).length){
-        throw "Tried to add duplicate serverID, you really ought to handle this";
+
+      var serverID;
+      if(!task.serverID){
+        serverID = makeId();
+        var existingTasks = user._doc.tasks;
+        if(existingTasks.filter(function(oldTask){return oldTask.serverID === serverID;}).length){
+          throw "Tried to add duplicate serverID, you really ought to handle this";
+        }
+        task.serverID = serverID;
+
+        // var result = db.User.update(
+        //    { _id: user._id },
+        //    { $addToSet: { tasks: task } }
+        // )
+
+        user.tasks.set(user.tasks.length, task);
+        user.save();
+      } else {
+        serverID = task.serverID;
+        let i;
+        for (i = 0; i < user.tasks.length; i++) {
+          if(user.tasks[i].serverID === serverID){
+            break;
+          }
+        }
+
+        if(i === user.tasks.length){
+          throw "Task uploaded with an existing serverID but couldn't find it!";
+        }
+
+        var existingTask = user.tasks[i];
+        
+        user.tasks.set(user.tasks.length, task);
+        user.save();
       }
-      task.serverID = serverID;
-
-      // var result = db.User.update(
-      //    { _id: user._id },
-      //    { $addToSet: { tasks: task } }
-      // )
-
-      user.tasks.set(user.tasks.length, task);
-      user.save();
       
       res.send(serverID);    
     }
@@ -150,6 +172,36 @@ app.get('/tasks', function(req, res){
       }
       
       res.send(user._doc.tasks);    
+    }
+  );
+});
+
+app.get('/tasks/:requestedServerId', function(req, res){
+  if(!req.user){
+    res.sendStatus(401);
+    return;
+  }
+
+  return db.User.findOne({ username: req.user.username }).exec()
+  .then(function (user){ 
+      if(!user){
+        throw "Trying to add task to logged in user but can't find in database";
+      }
+      
+      var serverID = req.params.requestedServerId;
+      let i;
+      for (i = 0; i < user.tasks.length; i++) {
+        if(user.tasks[i].serverID === serverID){
+          break;
+        }
+      }
+
+      if(i === user.tasks.length){
+        res.sendStatus(404);
+      }
+
+      var existingTask = user.tasks[i];
+      res.send(existingTask);
     }
   );
 });
@@ -201,7 +253,7 @@ app.get('/getUsers', function(req, res){
 
   var name = req.user.username;
   if(name !== "admin"){
-    res.status(401).json("No permission to see admin pages");
+    res.status(403).json("No permission to see admin pages");
   }
 
 	var users;
@@ -276,11 +328,9 @@ passport.use('local-signup', new LocalStrategy(
 
 // Passport session setup.
 passport.serializeUser(function(user, done) {
-  console.log("serializing " + user.username);
   done(null, user);
 });
 
 passport.deserializeUser(function(obj, done) {
-  console.log("deserializing " + obj.username);
   done(null, obj);
 });

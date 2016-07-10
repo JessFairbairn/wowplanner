@@ -73,6 +73,8 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
     }
   },true);
 
+  /*INITIALISING VARIABLES*/
+
 	WowTask.AssignIds($scope.tasks);
 
 	$scope.filters = wowFilters;
@@ -88,6 +90,22 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 	$scope.debugMode = false;
 
   $scope.selectedTask = null;
+
+  /*SETTING UP SYNCING SERVICE*/
+  setInterval(function(){
+    if(!$scope.userData || !$scope.userData.username){
+      return;
+    }
+
+    var task = $scope.tasks.filter(function(task){
+      return task.synced === false && !task.serverID;
+    })[0];
+
+    if(task){
+      webService.uploadTask(task);
+    }
+    
+  },1000);
 
 	$scope.findTaskById = function(ID){
    		for (var i = $scope.tasks.length - 1; i >= 0; i--) {
@@ -310,7 +328,7 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
      };
 
      $scope.taskSubmit = function(){
-        uploadTask($scope.selectedTask);
+        webService.uploadTask($scope.selectedTask);
      };
 
      $scope.downloadTasks = function(){
@@ -322,16 +340,16 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
         });
      };
 
-     function uploadTask(task){
-      $http.post('/task', task)
+     $scope.downloadTask = function(){
+        webService.getTasks()
         .then(function(res){
-            task.synced = true;
-            task.serverID = res.data;
-
+            console.debug(res.data);
         }, function(){
-          alert("Error uploading task :(");
+          alert("Error downloading tasks :(");
         });
-      }
+     };
+
+     
 
       $scope.deleteAllTasksOnServer=function(){
         if(!confirm("DANGEROUS! Are you sure you want to delete all tasks on the server?")){
