@@ -7,6 +7,7 @@
 	<script src="app.js"></script>
 	<script src="services/WowTask.js"></script>
 	<script src="services/webService.js"></script>
+	<script src="services/taskAdder.js"></script>
 	<script src="/node_modules/angular-local-storage/src/angular-local-storage.js"></script>
 	<script src="nonAngular.js"></script>
 	<!-- <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-animate.min.js"></script> -->
@@ -67,10 +68,7 @@
 				You have {{numberOfOverdueDeadlines()}} overdue deadlines!!!
 			</span>
 
-			<div id="addTaskDiv">
-				<input type="text" ng-model="newTask.title" ng-keydown="returnKeyOverride($event,addTaskForToday);" 
-				placeholder="Add a task for today..." list="existingTasksToScheduleList">
-				<button type="button" ng-click="addTaskForToday()">Add Task</button>
+			<div add-task task-adder="taskAdder" new-task="newTask">			
 			</div>
 			<datalist id="existingTasksToScheduleList">
 				<option ng-repeat="task in (tasks|filter:filters.notCompleted)" ng-value="task"><!-- {{task.title}} --></option>
@@ -89,7 +87,7 @@
 			</ul>
 		</div>
 		<div id="allTasksView" class="view" ng-show="currentView === 'allTasksView'">
-			<div id="addTaskDiv">
+			<div class="addTaskDiv">
 				<input type="text" ng-model="newTask.title" ng-keydown="returnKeyOverride($event,addTask);" placeholder="Add a task...">
 				<button type="button" ng-click="addTask()">Add Task</button>
 			</div>

@@ -47,6 +47,12 @@ input[type=checkbox],input[type=radio]{
 	flex-grow:0!important;
 }
 
+input[type=checkbox].smallCheckbox,input[type=radio].smallCheckbox{
+	height:15px;
+	width: 15px;
+	flex-grow:0!important;
+}
+
 button{
 	height:30px;	
 	border-radius: 2px;
@@ -145,15 +151,29 @@ label input, label select{
 	width:100%;
 }
 
-#addTaskDiv{
+.addTaskDiv{
 	display: flex;
 	max-width: 500px;
 }
 
-#addTaskDiv input{
+.addTaskDiv input{
 	flex-grow: 1;
 	margin:0;
 	margin-right: 1px;
+}
+.slideDown{
+	padding-top:2px;
+	transition: all 1s;
+	overflow:hidden;
+}
+
+.slideDown{
+	max-height:30px;
+	opacity:1;
+}
+.slideDown.ng-hide{
+	max-height:0px;
+	opacity:0;
 }
 
 #taskList{

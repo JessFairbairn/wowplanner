@@ -47,3 +47,8 @@ select[multiple] option:hover{
 #viewNavigiation li:hover{
 	background-color: #F5F0FB;
 }
+
+
+/*.addTaskDiv:active{
+	border: 1px solid #888;
+}*/

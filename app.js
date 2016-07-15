@@ -2,13 +2,15 @@
 /* global angular, getAngularScope*/
 
 "use strict";
-var app = angular.module("wowApp",['LocalStorageModule',"WebModule",/* 'ngAnimate'*/,'angular-date-picker-polyfill'])
+var app = angular.module("wowApp",['LocalStorageModule',"WebModule", 'ngAnimate','angular-date-picker-polyfill'])
 .config(['localStorageServiceProvider', function(localStorageServiceProvider){
   localStorageServiceProvider.setPrefix('ls');
 }]);
 
-app.controller("wowController", ["$scope","$http","localStorageService","wowFilters","WowTask","webService",
-    function($scope,$http,localStorageService,wowFilters,WowTask,webService) {
+app.controller("wowController", ["$scope","$http","localStorageService","wowFilters","WowTask","webService","taskAdder",
+    function($scope,$http,localStorageService,wowFilters,WowTask,webService,taskAdder) {
+  $scope.taskAdder = taskAdder;
+
 	//initialise variables
 	$scope.isModalVisible = function() {
 		return $scope.selectedTask || $scope.displayLoginDialog || $scope.displayRegisterDialog;
@@ -470,3 +472,4 @@ app.directive('sidebar', function() {
         }
     };
 });
+
