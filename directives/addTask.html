@@ -1,0 +1,9 @@
+<div class="addTaskDiv">
+	<input type="text" ng-model="newTask.title" ng-keydown="returnKeyOverride($event,addTaskForToday);" 
+	placeholder="Add a task...">
+	<button type="button" ng-click="$parent.addTask()">Add Task</button>			
+</div>
+<div class="slideDown" ng-show="newTask.title">
+	<label><input type='checkbox' class="smallCheckbox"
+	ng-click="taskAdder.scheduledTodayChange($event, newTask)">Schedule For Today</label>
+</div>

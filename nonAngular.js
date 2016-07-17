@@ -52,3 +52,11 @@ if ('serviceWorker' in navigator) {
 	// 	// Registration was successful
 	// });
 }
+
+function toggleDebugging(){
+	var scope = getAngularScope();
+	scope.debugMode = !scope.debugMode;
+	scope.$apply();
+}
+
+console.debug("Run toggleDebugging() to toggle debugging mode.");

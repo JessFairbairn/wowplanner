@@ -25,19 +25,23 @@
 <div id="mainWrapper">
 	<div id="filterDiv">
 		<h1>Wow Planner</h1>
-		<button type="button" ng-click="displayLoginDialog = true;selectedTask = null;"
-			 ng-show="!userData.username">Login</button>
-		<button type="button" ng-click="displayRegisterDialog = true;selectedTask = null;"
-			ng-show="!userData.username">Register</button>
-		<button type="button" ng-click="logoutSubmit();"
-			ng-show="userData.username">Log Out</button>
-		<button type="button" ng-click="deleteAllTasksOnServer()" ng-show="debugMode">Delete Tasks on server</button>
+		<div ng-show="debugMode">
+			<button type="button" ng-click="displayLoginDialog = true;selectedTask = null;"
+				 ng-show="!userData.username">Login</button>
+			<button type="button" ng-click="displayRegisterDialog = true;selectedTask = null;"
+				ng-show="!userData.username">Register</button>
+			<button type="button" ng-click="logoutSubmit();"
+				ng-show="userData.username">Log Out</button>
+		</div>		
+		<!-- <button ng-click="debugMode = !debugMode;">Toggle Debugging</button> -->
+		<button type="button" ng-click="deleteAllTasksOnServer()"
+		ng-show="debugMode && userData.username">Delete Tasks on server</button>
 		<br>
 		<div id="filterWrapper">
-		<label><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.all">All Tasks</label><br>
-		<label><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.dueToday">Due Today</label>
+		<label  ng-show="currentView === 'allTasksView'"><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.all">All Tasks</label><br>
+		<label ng-show="currentView === 'allTasksView'"><input type="radio" name="activeFilter" ng-model="activeFilter" ng-value="filters.dueToday">Due Today</label>
 		<br>
-		<fieldset>
+		<fieldset ng-show="currentView === 'allTasksView'">
 			<legend>Tags</legend>
 			<div ng-repeat="(key, value) in tagMap" class=row contextmenu="tagMenu">
 				<input type="checkbox" ng-model="tagMap[key]" ng-attr-id="{{'toggleTag' + $index}}">
@@ -50,7 +54,6 @@
 		</menu>
 		</fieldset>
 		<br><br>
-		<button ng-click="debugMode = !debugMode;">Toggle Debugging</button>
 		<button ng-click="scopeDump()" ng-show="debugMode">Scope Dump</button>
 		<button ng-click="localStorageDump()" ng-show="debugMode">Local Storage Dump</button>
 		</div>
@@ -65,14 +68,15 @@
 		<div id="summaryView" class="view" ng-show="currentView === 'summaryView'">
 			<h2>Hi!</h2>
 			<span ng-show="numberOfOverdueDeadlines();" style="color:red">
-				You have {{numberOfOverdueDeadlines()}} overdue deadlines!!!
+				You have {{numberOfOverdueDeadlines()}} overdue
+				deadline<span ng-show="numberOfOverdueDeadlines() > 1">s</span>!
 			</span>
 
 			<div add-task task-adder="taskAdder" new-task="newTask">			
 			</div>
-			<datalist id="existingTasksToScheduleList">
-				<option ng-repeat="task in (tasks|filter:filters.notCompleted)" ng-value="task"><!-- {{task.title}} --></option>
-			</datalist>
+			<!-- <datalist id="existingTasksToScheduleList">
+				<option ng-repeat="task in (tasks|filter:filters.notCompleted)" ng-value="task">{{task.title}}</option>
+			</datalist> -->
 
 			<h3 ng-show="(tasks|filter:filters.scheduledToday).length">Tasks for Today:</h3>
 			<ul id="taskList">
@@ -87,9 +91,7 @@
 			</ul>
 		</div>
 		<div id="allTasksView" class="view" ng-show="currentView === 'allTasksView'">
-			<div class="addTaskDiv">
-				<input type="text" ng-model="newTask.title" ng-keydown="returnKeyOverride($event,addTask);" placeholder="Add a task...">
-				<button type="button" ng-click="addTask()">Add Task</button>
+			<div add-task task-adder="taskAdder" new-task="newTask">			
 			</div>
 			<ul id="taskList">
 				<wow-task-li  ng-repeat="task in tasks | filter:activeFilter | filter: {isComplete:false} |filter:tagFilter | orderBy:recursiveTaskOrder"/>
