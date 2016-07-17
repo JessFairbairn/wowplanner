@@ -137,7 +137,7 @@ app.post('/task', function(req, res){
         user.save();
       } else {
         serverID = task.serverID;
-        let i;
+        let i = 0;
         for (i = 0; i < user.tasks.length; i++) {
           if(user.tasks[i].serverID === serverID){
             break;
