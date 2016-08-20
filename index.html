@@ -153,12 +153,27 @@
 			<option ng-repeat="(key,value) in tagMap">{{key}}</option>
 		</datalist>
 	</div>
-	<div class="row">
-		<!-- /*Dependant on...*/ -->
-		<label>Prerequisites</label>
+	<!-- <div>
 		<select multiple="multiple" ng-model="selectedTask.prerequisites" 
-			ng-options="prereqTask.ID as prereqTask.title for prereqTask in tasks | filter: {isComplete: false} | filter: preReqFilter">
+			ng-options="prereqTask.ID as prereqTask.title for prereqTask in selectedTask.possiblePrerequisites(tasks)">
 		</select>
+	</div> -->
+	<div class="row">	
+		<label>Prerequisites</label>
+		<select ng-model="newPrerequisite" 
+			ng-change="selectedTask.AddPrerequisite(newPrerequisite);newPrerequisite=null">
+			<option ng-repeat="otherTask in selectedTask.possiblePrerequisites(tasks)"
+				ng-value="otherTask.ID">
+				{{otherTask.title}}
+			</option>
+		</select>
+	</div>
+	<div class="row">
+		<ul>
+			<li ng-repeat="prereqId in selectedTask.prerequisites" class="miniTask">{{findTaskById(prereqId).title}}
+				<button style="float:right" ng-click="selectedTask.RemovePrerequisite(prereqId)">X</button>
+			</li>
+		</ul>
 	</div>
 	<div class="row" ng-show="debugMode">	
 		<button ng-click="taskSubmit()">Submit To Server</button>

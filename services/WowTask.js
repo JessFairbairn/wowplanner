@@ -28,8 +28,39 @@ angular.module("wowApp").factory('WowTask', function(){
 
 		this.RemoveTag = function(inputTag){
 			var index = this.tags.indexOf(inputTag);
-			this.tags.splice(index,1);			
+			this.tags.splice(index,1);		
 		};
+
+		this.AddPrerequisite = function(newPreReq){
+			if(typeof newPreReq === "string"){
+				var num = parseInt(newPreReq);
+				if(isNaN(num)){
+					throw "Passed invalid string to AddPrerequisite";
+				}
+				this.prerequisites.push(num);
+			}
+			else if(typeof newPreReq === "number"){
+				if(Math.floor(newPreReq) !== newPreReq){
+					throw "Passed non-integer number to AddPrerequisite";
+				}
+				this.prerequisites.push(newPreReq);
+			}
+		}
+
+		this.RemovePrerequisite = function(id){
+			var index = this.prerequisites.indexOf(id);
+			this.prerequisites.splice(index,1);
+		}
+
+		this.possiblePrerequisites = function(allTasks){
+			var parentTask = this;
+	      return allTasks.filter(function(otherTask){
+		      return !otherTask.isComplete
+		      	&& otherTask.ID !== parentTask.ID
+		      	&& otherTask.prerequisites.indexOf(parentTask.ID) === -1
+		      	&& parentTask.prerequisites.indexOf(otherTask.ID) === -1;
+		      //TODO recursive check to make sure no loops of prerequisites
+	    })};
 
 		Object.defineProperty(this, "deadline", { 
 			  get: function() { 

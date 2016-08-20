@@ -131,6 +131,11 @@ app.controller("wowController", ["$scope","$http","localStorageService","wowFilt
 		for (var i = $scope.tasks.length - 1; i >= 0; i--) {
 			var childTask = $scope.tasks[i];
 
+      if(typeof childTask.prerequisites === "number"){
+        childTask.prerequisites = [childTask.prerequisites];
+        console.warn("Changed prerequisites to array on task "+task.title);
+      }
+
 			if(childTask.prerequisites.indexOf(task.ID)>-1){
             hasDependents = true;
 				var childScore = $scope.recursiveTaskOrder(childTask,recursionLevel + 1);
@@ -432,7 +437,14 @@ app.service('wowFilters', function(){
 
    this.notComplete = function(task){
       return !task.isComplete;
-   };   
+   };
+
+   this.possiblePrerequisites = function(task, allTasks){
+    allTasks.filter(function(otherTask){
+      return !otherTask.isComplete && otherTask.prerequisites.indexOf(task.ID) === -1;
+      //TODO recursive check to make sure no loops of prerequisites
+    });
+   }
 
 });
 
