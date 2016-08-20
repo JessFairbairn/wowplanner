@@ -1,3 +1,6 @@
 [submodule "themes/wowplanner-lavender-theme"]
 	path = themes/wowplanner-lavender-theme
 	url = https://github.com/JessFairbairn/wowplanner-lavender-theme
+[submodule "scripts/angular-date-picker-polyfill"]
+	path = scripts/angular-date-picker-polyfill
+	url = https://github.com/adamalbrecht/angular-date-picker-polyfill
