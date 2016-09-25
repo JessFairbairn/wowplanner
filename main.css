@@ -262,8 +262,15 @@ wow-task-li li .fa-calendar-o{
 
 .miniTask{
 	height:30px;
-	width:200px;
+	width:300px;
 	padding:4px;
+	display:flex;
+}
+
+.miniTask span{
+	overflow:hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .miniTask button{

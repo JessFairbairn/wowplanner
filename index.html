@@ -170,7 +170,8 @@
 	</div>
 	<div class="row">
 		<ul>
-			<li ng-repeat="prereqId in selectedTask.prerequisites" class="miniTask">{{findTaskById(prereqId).title}}
+			<li ng-repeat="prereqId in selectedTask.prerequisites" class="miniTask">
+			<span>{{findTaskById(prereqId).title}}</span>
 				<button style="float:right" ng-click="selectedTask.RemovePrerequisite(prereqId)">X</button>
 			</li>
 		</ul>
