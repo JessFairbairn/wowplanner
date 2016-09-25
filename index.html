@@ -43,7 +43,7 @@
 		<br>
 		<fieldset ng-show="currentView === 'allTasksView'">
 			<legend>Tags</legend>
-			<div ng-repeat="(key, value) in tagMap" class=row contextmenu="tagMenu">
+			<div ng-repeat="(key, value) in collectTags()" class=row contextmenu="tagMenu">
 				<input type="checkbox" ng-model="tagMap[key]" ng-attr-id="{{'toggleTag' + $index}}">
 				<label ng-attr-for="{{'toggleTag' + $index}}">{{key}}</label>
 			</div>
