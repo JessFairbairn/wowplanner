@@ -163,6 +163,15 @@ label input, label select{
 	flex-grow: 1;
 }
 
+#allTasksView{
+	display: flex;
+	flex-direction: column;
+}
+
+#taskList{
+	overflow-y: auto;
+}
+
 .addTaskDiv{
 	display: flex;
 	max-width: 500px;
