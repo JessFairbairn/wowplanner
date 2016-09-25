@@ -6,6 +6,7 @@ launchEnv.sh
 *.log
 
 
+nohup.out
 
 examples/
 
