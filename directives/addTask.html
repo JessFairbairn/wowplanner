@@ -1,5 +1,5 @@
 <div class="addTaskDiv">
-	<input type="text" ng-model="newTask.title" ng-keydown="returnKeyOverride($event,addTaskForToday);" 
+	<input type="text" ng-model="newTask.title" ng-keydown="$parent.returnKeyOverride($event,$parent.addTask);" 
 	placeholder="Add a task...">
 	<button type="button" ng-click="$parent.addTask()">Add Task</button>			
 </div>
